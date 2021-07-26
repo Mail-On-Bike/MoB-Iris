@@ -465,7 +465,7 @@
                     class="input input2"
                     type="number"
                     v-model="pedidoIndividual.tarifa"
-                    v-on:keyup="changeTarifa"
+                    @input="changeTarifa"
                     @change="changeTarifa"
                   />
                 </td>
@@ -475,7 +475,7 @@
                     class="input input2"
                     type="number"
                     v-model="pedidoIndividual.recaudo"
-                    v-on:keyup="changeRecaudo"
+                    @input="calcularRecaudo(pedidoIndividual)"
                     @change="changeRecaudo"
                   />
                 </td>
@@ -484,7 +484,7 @@
                     class="input input2"
                     type="number"
                     v-model="pedidoIndividual.tramite"
-                    v-on:keyup="changeTramite"
+                    @input="changeTramite"
                     @change="changeTramite"
                   />
                 </td>
@@ -722,15 +722,9 @@ export default {
     "pedido.modalidad": function() {
       if (this.pedido.modalidad === "Con Retorno") {
         this.pedido.viajes = 2;
-        // if (this.pedido.tipoEnvio === "E-Commerce") {
-        //   this.pedido.tarifa *= 2;
-        // } else {
-        //   this.pedido.tarifa += +Math.ceil(this.pedido.tarifa / 2);
-        // }
       }
       if (this.pedido.modalidad === "Una vía") {
         this.pedido.viajes = 1;
-        //this.pedido.tarifa = this.tarifaMemoria;
       }
     },
   },
@@ -749,10 +743,12 @@ export default {
           }
         }
         this.pedidos[index].viajes = 2;
+        this.pedidos[index].distancia *= 2;
       }
       if (modalidad === "Una vía") {
         this.pedidos[index].viajes = 1;
         this.pedidos[index].tarifa = this.pedidos[index].tarifaMemoria;
+        this.pedidos[index].distancia = this.pedidos[index].distanciaMemoria;
       }
       this.changeTarifa();
     },
@@ -872,6 +868,7 @@ export default {
             );
             row["empresaConsignado"] = "";
             row["distancia"] = info.distancia;
+            row["distanciaMemoria"] = info.distancia;
             row["tarifa"] = info.tarifa;
             row["tarifaMemoria"] = info.tarifaMemoria;
             row["tarifaSugerida"] = info.tarifaSugerida;
@@ -901,42 +898,39 @@ export default {
         }
       } else {
         const isValid = await this.$validator.validateAll();
-        // if (this.pedido.distancia === (null || undefined)) {
-        //   this.errorCalcularDistancia = true;
-        //   return;
-        // }
         if (!isValid) {
           return;
         }
       }
     },
 
-    changeRecaudo() {
-      let total = 0;
-      for (let i in this.pedidos) {
-        if (
-          this.pedidos[i].recaudo === "" ||
-          this.pedidos[i].recaudo === null
-        ) {
-          this.pedidos[i].recaudo = 0;
-        }
-        total += parseFloat(this.pedidos[i].recaudo);
+    calcularRecaudo(pedido) {
+      if (pedido.recaudo !== 0) {
+        pedido.tarifa = +(pedido.tarifaMemoria + 2);
       }
-      this.recaudoTotal = total;
+      if (pedido.recaudo === 0) {
+        pedido.tarifa = +pedido.tarifaMemoria;
+      }
+    },
+
+    changeRecaudo() {
+      let total = this.pedidos.reduce((acc, pedido) => {
+        if (pedido.recaudo === "" || pedido.recaudo === null)
+          pedido.recaudo = 0;
+
+        return +pedido.recaudo + acc;
+      }, 0);
+      this.recaudoTotal = +total.toFixed(2);
     },
 
     changeTramite() {
-      let total = 0;
-      for (let i in this.pedidos) {
-        if (
-          this.pedidos[i].tramite === "" ||
-          this.pedidos[i].tramite === null
-        ) {
-          this.pedidos[i].tramite = 0;
-        }
-        total += parseFloat(this.pedidos[i].tramite);
-      }
-      this.tramiteTotal = total;
+      let total = this.pedidos.reduce((acc, pedido) => {
+        if (pedido.tramite === "" || pedido.tramite === null)
+          pedido.tramite = 0;
+
+        return +pedido.tramite + acc;
+      }, 0);
+      this.tramiteTotal = +total.toFixed(2);
     },
 
     handelActualizarRuteo() {
@@ -1210,6 +1204,7 @@ export default {
             data[i].distritoConsignado
           );
           data[i]["distancia"] = info.distancia;
+          data[i]["distanciaMemoria"] = info.distancia;
           data[i]["tarifa"] = info.tarifa;
           data[i]["tarifaMemoria"] = info.tarifaMemoria;
           data[i]["tarifaSugerida"] = info.tarifaSugerida;

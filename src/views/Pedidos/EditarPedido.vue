@@ -564,6 +564,7 @@ export default {
       es: es,
       tarifaMemoria: 0,
       tarifaSugeridaMemoria: 0,
+      distanciaMemoria: 0,
     };
   },
   async mounted() {
@@ -640,6 +641,7 @@ export default {
     "editarPedido.modalidad": function() {
       if (this.editarPedido.modalidad === "Con Retorno") {
         this.editarPedido.viajes = 2;
+        this.editarPedido.distancia *= 2;
         if (this.editarPedido.tipoEnvio === "E-Commerce") {
           this.editarPedido.tarifa = this.tarifaMemoria * 2;
         } else {
@@ -649,6 +651,7 @@ export default {
       if (this.editarPedido.modalidad === "Una vía") {
         this.editarPedido.viajes = 1;
         this.editarPedido.tarifa = this.tarifaMemoria;
+        this.editarPedido.distancia = this.distanciaMemoria;
       }
     },
   },
@@ -720,6 +723,13 @@ export default {
           this.editarPedido.direccionConsignado,
           this.editarPedido.distritoConsignado
         );
+
+        this.distanciaMemoria = this.editarPedido.distancia;
+        if (this.editarPedido.modalidad === "Con Retorno") {
+          this.editarPedido.distancia = this.distanciaMemoria * 2;
+        } else {
+          this.editarPedido.distancia = this.distanciaMemoria;
+        }
 
         if (
           this.editarPedido.distancia === null ||

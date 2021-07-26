@@ -435,12 +435,12 @@
             </div>
             <div>
               <div style="min-height:200px;">
-                <h2 class="text-xl font-bold text-center">
+                <h2 class="text-xl font-bold text-center text-primary">
                   Pedidos individuales "Programados"
                 </h2>
                 <hr />
-                <table class="table-auto" style="max-height: 180px;">
-                  <thead>
+                <table class="table-auto " style="max-height: 180px;">
+                  <thead class="text-primary">
                     <tr>
                       <th></th>
                       <th>ID</th>
@@ -548,7 +548,7 @@
                     class="input input2"
                     type="number"
                     v-model="pedidoIndividual.tarifa"
-                    v-on:keyup="changeTarifa"
+                    @input="changeTarifa"
                     @change="changeTarifa"
                   />
                 </td>
@@ -560,7 +560,7 @@
                     class="input input2"
                     type="number"
                     v-model="pedidoIndividual.recaudo"
-                    v-on:keyup="changeRecaudo"
+                    @input="calcularRecaudo(pedidoIndividual)"
                     @change="changeRecaudo"
                   />
                 </td>
@@ -569,7 +569,7 @@
                     class="input input2"
                     type="number"
                     v-model="pedidoIndividual.tramite"
-                    v-on:keyup="changeTramite"
+                    @input="changeTramite"
                     @change="changeTramite"
                   />
                 </td>
@@ -770,15 +770,6 @@ export default {
             : 0;
       }
     },
-
-    "nuevoPedido.modalidad": function() {
-      if (this.nuevoPedido.modalidad === "Con Retorno") {
-        this.nuevoPedido.viajes = 2;
-      }
-      if (this.nuevoPedido.modalidad === "Una vía") {
-        this.nuevoPedido.viajes = 1;
-      }
-    },
   },
   methods: {
     ...mapActions("mobikers", ["obtenerComision"]),
@@ -795,10 +786,12 @@ export default {
           }
         }
         this.pedidos[index].viajes = 2;
+        this.pedidos[index].distancia *= 2;
       }
       if (modalidad === "Una vía") {
         this.pedidos[index].viajes = 1;
         this.pedidos[index].tarifa = this.pedidos[index].tarifaMemoria;
+        this.pedidos[index].distancia = this.pedidos[index].distanciaMemoria;
       }
       this.changeTarifa();
     },
@@ -846,40 +839,41 @@ export default {
 
     changeDistancia() {
       let total = this.pedidos.reduce((acc, pedido) => {
-        if (pedido.distancia === "" || pedido.distancia === null) {
+        if (pedido.distancia === "" || pedido.distancia === null)
           pedido.distancia = 0;
-        }
+
         return +pedido.distancia + acc;
       }, 0);
-      return +total.toFixed(2);
+      return +total.toFixed(1);
+    },
+
+    calcularRecaudo(pedido) {
+      if (pedido.recaudo !== 0) {
+        pedido.tarifa = +(pedido.tarifaMemoria + 2);
+      }
+      if (pedido.recaudo === 0) {
+        pedido.tarifa = +pedido.tarifaMemoria;
+      }
     },
 
     changeRecaudo() {
-      let total = 0;
-      for (let i in this.pedidos) {
-        if (
-          this.pedidos[i].recaudo === "" ||
-          this.pedidos[i].recaudo === null
-        ) {
-          this.pedidos[i].recaudo = 0;
-        }
-        total += parseFloat(this.pedidos[i].recaudo);
-      }
-      this.recaudoTotal = total;
+      let total = this.pedidos.reduce((acc, pedido) => {
+        if (pedido.recaudo === "" || pedido.recaudo === null)
+          pedido.recaudo = 0;
+
+        return +pedido.recaudo + acc;
+      }, 0);
+      this.recaudoTotal = +total.toFixed(2);
     },
 
     changeTramite() {
-      let total = 0;
-      for (let i in this.pedidos) {
-        if (
-          this.pedidos[i].tramite === "" ||
-          this.pedidos[i].tramite === null
-        ) {
-          this.pedidos[i].tramite = 0;
-        }
-        total += parseFloat(this.pedidos[i].tramite);
-      }
-      this.tramiteTotal = total;
+      let total = this.pedidos.reduce((acc, pedido) => {
+        if (pedido.tramite === "" || pedido.tramite === null)
+          pedido.tramite = 0;
+
+        return +pedido.tramite + acc;
+      }, 0);
+      this.tramiteTotal = +total.toFixed(2);
     },
 
     async convertirExcelData() {
@@ -930,6 +924,7 @@ export default {
             );
             row["empresaConsignado"] = "";
             row["distancia"] = info.distancia;
+            row["distanciaMemoria"] = info.distancia;
             row["tarifa"] = info.tarifa;
             row["tarifaMemoria"] = info.tarifaMemoria;
             row["tarifaSugerida"] = info.tarifaSugerida;
@@ -986,6 +981,7 @@ export default {
         );
         destino["empresaConsignado"] = "";
         destino["distancia"] = info.distancia;
+        destino["distanciaMemoria"] = info.distancia;
         destino["tarifa"] = info.tarifa;
         destino["tarifaMemoria"] = info.tarifaMemoria;
         destino["tarifaSugerida"] = info.tarifaSugerida;
