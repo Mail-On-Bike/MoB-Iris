@@ -93,7 +93,7 @@
       </div>
 
       <div
-        class="inline-grid items-center grid-cols-6 col-span-3 text-sm font-bold text-center text-primary"
+        class="inline-grid items-center grid-cols-7 col-span-3 mr-2 text-sm font-bold text-center text-primary"
       >
         <button @click="sortPorId" class="focus:outline-none">
           <p class="font-bold"># Pedido</p>
@@ -110,6 +110,9 @@
         <button @click="sortPorEstado" class="focus:outline-none">
           <p class="font-bold">Estado</p>
         </button>
+        <div>
+          <p class="font-bold">Forma de Pago</p>
+        </div>
         <button @click="sortPorFecha" class="focus:outline-none">
           <p class="font-bold">Fecha</p>
         </button>
@@ -146,38 +149,39 @@
 
         <div
           v-else
-          class="grid items-center h-auto grid-cols-6 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info"
+          class="grid items-center h-auto grid-cols-7 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': pedido.id == currentPedidoIndex,
           }"
           v-for="pedido in pedidosCliente"
           :key="pedido.id"
+          @click="setActivePedido(pedido, pedido.id)"
         >
-          <div @click="setActivePedido(pedido, pedido.id)">
+          <div>
             <p>{{ pedido.id }}</p>
           </div>
 
-          <div @click="setActivePedido(pedido, pedido.id)">
+          <div>
             <p>
               {{ pedido.empresaRemitente }}
             </p>
           </div>
 
-          <div @click="setActivePedido(pedido, pedido.id)">
+          <div>
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distritoRemitente }}
             </p>
             <p v-else>{{ pedido.distrito.distrito }}</p>
           </div>
 
-          <div @click="setActivePedido(pedido, pedido.id)">
+          <div>
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distrito.distrito }}
             </p>
             <p v-else>{{ pedido.distritoRemitente }}</p>
           </div>
 
-          <div @click="setActivePedido(pedido, pedido.id)">
+          <div>
             <p v-if="pedido.status.id === 1" class="tag-programado">
               {{ pedido.status.tag }}
             </p>
@@ -198,7 +202,11 @@
             </p>
           </div>
 
-          <div @click="setActivePedido(pedido, pedido.id)">
+          <div>
+            <p>{{ pedido.formaPago }}</p>
+          </div>
+
+          <div>
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
           </div>
         </div>
