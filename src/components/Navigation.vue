@@ -85,7 +85,7 @@ export default {
       linksDropMenu: [
         { title: "Mi Perfil", link: "/perfil" },
         { title: "Crear usuario", link: "/register" },
-        { title: "Gestionar usuarios", link: "/register" },
+        { title: "Equipo MoB Admin", link: "/equipo-admin" },
         // { title: "Mis Estadísticas", link: "/register" },
       ],
       navigationMenu: [

@@ -61,6 +61,49 @@ class AuthService {
       console.error(`Error al registrar nuevo usuario: ${error.message}`);
     }
   }
+
+  async changePassword() {
+    try {
+      let css;
+      console.log(css);
+    } catch (error) {
+      console.error(
+        `Error al obtener los miembros del Equipo Admin: ${error.message}`
+      );
+    }
+  }
+
+  async restartPassword(id) {
+    try {
+      let restablecer = await axios.post(
+        `${API_URL}/reset-password/${id}`,
+        {},
+        {
+          headers: authHeader(),
+        }
+      );
+
+      return restablecer;
+    } catch (error) {
+      console.error(
+        `Error al obtener los miembros del Equipo Admin: ${error.message}`
+      );
+    }
+  }
+
+  async getEquipoAdmin() {
+    try {
+      const response = await axios.get(`${API_URL}/equipo-admin`, {
+        headers: authHeader(),
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        `Error al obtener los miembros del Equipo Admin: ${error.message}`
+      );
+    }
+  }
 }
 
 export default new AuthService();

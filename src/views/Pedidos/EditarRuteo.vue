@@ -658,7 +658,7 @@ export default {
   },
   async mounted() {
     try {
-      this.getRuteo(this.$route.params.id);
+      await this.getRuteo(this.$route.params.id);
 
       this.mobikersFiltrados = this.mobikers.filter(
         (mobiker) => mobiker.status === "Activo"
@@ -669,6 +669,11 @@ export default {
       this.pedido.comision = 0.0;
       this.pedido.recaudo = 0;
       this.pedido.tramite = 0;
+
+      // Acomodando Fechas
+      this.pedido.fecha = new Date(
+        new Date(this.pedido.fecha).getTime() + 1000 * 60 * 60 * 5
+      );
     } catch (error) {
       console.error("Mensaje de error:", error);
     }

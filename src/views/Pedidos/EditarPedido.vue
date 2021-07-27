@@ -569,7 +569,7 @@ export default {
   },
   async mounted() {
     try {
-      this.getPedido(this.$route.params.id);
+      await this.getPedido(this.$route.params.id);
 
       this.mobikersFiltrados = this.mobikers.filter(
         (mobiker) => mobiker.status === "Activo"
@@ -577,6 +577,12 @@ export default {
 
       this.tarifaMemoria = this.editarPedido.tarifa;
       this.tarifaSugeridaMemoria = this.editarPedido.tarifaSugerida;
+      this.distanciaMemoria = this.editarPedido.distancia;
+
+      // Acomodando Fechas
+      this.editarPedido.fecha = new Date(
+        new Date(this.editarPedido.fecha).getTime() + 1000 * 60 * 60 * 5
+      );
     } catch (error) {
       console.error("Mensaje de error:", error);
     }

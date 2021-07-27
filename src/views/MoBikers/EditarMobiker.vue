@@ -434,6 +434,15 @@ export default {
   async mounted() {
     try {
       await this.getMobiker(this.$route.params.id);
+
+      // Acomodando Fechas
+      this.editarMobiker.fechaNacimiento = new Date(
+        new Date(this.editarMobiker.fechaNacimiento).getTime() +
+          1000 * 60 * 60 * 5
+      );
+      this.editarMobiker.fechaIngreso = new Date(
+        new Date(this.editarMobiker.fechaIngreso).getTime() + 1000 * 60 * 60 * 5
+      );
     } catch (error) {
       console.error("Mensaje de error:", error);
     }
@@ -486,6 +495,10 @@ export default {
         this.alert.success = false;
         setTimeout(() => (this.alert.show = false), 2500);
       }
+    },
+
+    revision() {
+      console.log(this.editarMobiker.fechaNacimiento);
     },
 
     cancelar() {

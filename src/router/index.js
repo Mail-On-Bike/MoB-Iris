@@ -26,6 +26,11 @@ const routes = [
     component: () => import("@/views/Profile.vue"),
   },
   {
+    path: "/equipo-Admin",
+    name: "EquipoAdmin",
+    component: () => import("@/views/EquipoAdmin.vue"),
+  },
+  {
     path: "/pedidos/tablero-pedidos",
     name: "TableroPedidos",
     component: () => import("@/views/Pedidos/TableroPedidos.vue"),
