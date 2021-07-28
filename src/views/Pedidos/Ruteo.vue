@@ -919,8 +919,8 @@ export default {
             }
 
             let info = await this.calcularDistancia(
-              row.direccionConsignado,
-              row.distritoConsignado
+              row.direccionConsignado.trim(),
+              row.distritoConsignado.trim()
             );
             row["empresaConsignado"] = "";
             row["distancia"] = info.distancia;
@@ -1102,6 +1102,7 @@ export default {
               ruteo: this.ruteoId,
             };
 
+            console.log(pedidoExtendido);
             response = await PedidoService.storageNuevoPedido(pedidoExtendido);
           }
         }

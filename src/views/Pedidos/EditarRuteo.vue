@@ -656,27 +656,12 @@ export default {
       showModalComentarioAnulados: false,
     };
   },
-  async mounted() {
-    try {
-      await this.getRuteo(this.$route.params.id);
+  mounted() {
+    this.getRuteo(this.$route.params.id);
 
-      this.mobikersFiltrados = this.mobikers.filter(
-        (mobiker) => mobiker.status === "Activo"
-      );
-
-      this.pedido.tarifa = 0;
-      this.pedido.tarifaSugerida = 0;
-      this.pedido.comision = 0.0;
-      this.pedido.recaudo = 0;
-      this.pedido.tramite = 0;
-
-      // Acomodando Fechas
-      this.pedido.fecha = new Date(
-        new Date(this.pedido.fecha).getTime() + 1000 * 60 * 60 * 5
-      );
-    } catch (error) {
-      console.error("Mensaje de error:", error);
-    }
+    this.mobikersFiltrados = this.mobikers.filter(
+      (mobiker) => mobiker.status === "Activo"
+    );
   },
   computed: {
     ...mapState("auxiliares", [
@@ -1270,7 +1255,18 @@ export default {
 
         this.pedidos = response.data.pedidosRuta;
 
-        this.getPedidosByCliente(response.data.pedidosRuta[0].clienteId);
+        await this.getPedidosByCliente(response.data.pedidosRuta[0].clienteId);
+
+        this.pedido.tarifa = 0;
+        this.pedido.tarifaSugerida = 0;
+        this.pedido.comision = 0.0;
+        this.pedido.recaudo = 0;
+        this.pedido.tramite = 0;
+
+        // Acomodando Fechas
+        this.pedido.fecha = new Date(
+          new Date(this.pedido.fecha).getTime() + 1000 * 60 * 60 * 5
+        );
       } catch (error) {
         console.error(`Error al obtener un Ruteo por Id. ${error.message}`);
       }

@@ -574,15 +574,6 @@ export default {
       this.mobikersFiltrados = this.mobikers.filter(
         (mobiker) => mobiker.status === "Activo"
       );
-
-      this.tarifaMemoria = this.editarPedido.tarifa;
-      this.tarifaSugeridaMemoria = this.editarPedido.tarifaSugerida;
-      this.distanciaMemoria = this.editarPedido.distancia;
-
-      // Acomodando Fechas
-      this.editarPedido.fecha = new Date(
-        new Date(this.editarPedido.fecha).getTime() + 1000 * 60 * 60 * 5
-      );
     } catch (error) {
       console.error("Mensaje de error:", error);
     }
@@ -636,16 +627,17 @@ export default {
     },
 
     "editarPedido.recaudo": function() {
-      // if (this.editarPedido.recaudo !== 0) {
-      //   this.editarPedido.tarifa = +(this.tarifaMemoria + 2);
-      // }
+      if (this.editarPedido.recaudo !== 0) {
+        this.editarPedido.tarifa = +(this.tarifaMemoria + 2);
+      }
       if (this.editarPedido.recaudo === 0) {
         this.editarPedido.tarifa = this.tarifaMemoria;
       }
     },
 
     "editarPedido.modalidad": function() {
-      if (this.editarPedido.modalidad === "Con Retorno") {
+      console.log(this.editarPedido.modalidad);
+      if (this.editarPedido.modalidad.tipo === "Con Retorno") {
         this.editarPedido.viajes = 2;
         this.editarPedido.distancia *= 2;
         if (this.editarPedido.tipoEnvio === "E-Commerce") {
@@ -654,7 +646,7 @@ export default {
           this.editarPedido.tarifa += +Math.ceil(this.tarifaMemoria / 2);
         }
       }
-      if (this.editarPedido.modalidad === "Una vía") {
+      if (this.editarPedido.modalidad.tipo === "Una vía") {
         this.editarPedido.viajes = 1;
         this.editarPedido.tarifa = this.tarifaMemoria;
         this.editarPedido.distancia = this.distanciaMemoria;
@@ -672,6 +664,13 @@ export default {
         this.editarPedido.distritoConsignado = response.data.distrito.distrito;
         this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
         this.tarifaMemoria = this.editarPedido.tarifa;
+        this.tarifaSugeridaMemoria = this.editarPedido.tarifaSugerida;
+        this.distanciaMemoria = this.editarPedido.distancia;
+
+        // Acomodando Fechas
+        this.editarPedido.fecha = new Date(
+          new Date(this.editarPedido.fecha).getTime() + 1000 * 60 * 60 * 5
+        );
       } catch (error) {
         console.error("Mensaje de error:", error);
       }
@@ -683,7 +682,7 @@ export default {
         if (!isValid) {
           return;
         }
-        console.log(this.editarPedido);
+
         const response = await PedidoService.editPedido(
           this.$route.params.id,
           this.editarPedido
