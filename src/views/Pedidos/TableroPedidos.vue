@@ -34,7 +34,10 @@
 
     <CambiarStatusPedido
       :showCambiarStatus="showCambiarStatus"
-      @cerrarModal="showCambiarStatus = false"
+      @cerrarModal="
+        showCambiarStatus = false;
+        refreshList();
+      "
       :currentPedido="currentPedido"
     />
 
