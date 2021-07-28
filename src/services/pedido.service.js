@@ -121,7 +121,7 @@ class PedidoService {
           CO2Ahorrado: editarPedido.CO2Ahorrado,
           ruido: editarPedido.ruido,
           status: editarPedido.statusId,
-          distritoConsignado: editarPedido.distrito.distrito,
+          distritoConsignado: editarPedido.distritoConsignado,
           mobiker: editarPedido.mobiker.fullName,
           tipoEnvio: editarPedido.tipoDeEnvio.tipo,
           modalidad: editarPedido.modalidad.tipo,

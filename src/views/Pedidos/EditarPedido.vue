@@ -672,7 +672,6 @@ export default {
         this.editarPedido.distritoConsignado = response.data.distrito.distrito;
         this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
         this.tarifaMemoria = this.editarPedido.tarifa;
-        console.log(this.editarPedido.fecha);
       } catch (error) {
         console.error("Mensaje de error:", error);
       }
@@ -684,7 +683,7 @@ export default {
         if (!isValid) {
           return;
         }
-
+        console.log(this.editarPedido);
         const response = await PedidoService.editPedido(
           this.$route.params.id,
           this.editarPedido
