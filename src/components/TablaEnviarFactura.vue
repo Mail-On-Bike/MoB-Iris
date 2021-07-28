@@ -9,6 +9,7 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
+      <th class="table-cell">Trámite</th>
       <th class="table-cell">Observaciones</th>
     </tr>
 
@@ -55,6 +56,11 @@
       >
         {{ totalTarifa }}
       </td>
+      <td
+        class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
+      >
+        {{ totalTramite }}
+      </td>
     </tr>
   </table>
 
@@ -67,6 +73,7 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
+      <th class="table-cell">Trámite</th>
       <th class="table-cell">Observaciones</th>
     </tr>
 
@@ -95,6 +102,9 @@
         {{ detalle.tarifa }}
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
+        {{ detalle.tramite }}
+      </td>
+      <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.otroDatoConsignado }}
       </td>
     </tr>
@@ -108,6 +118,11 @@
         class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
       >
         {{ totalTarifa }}
+      </td>
+      <td
+        class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
+      >
+        {{ totalTramite }}
       </td>
     </tr>
   </table>
@@ -128,10 +143,16 @@ export default {
   },
   computed: {
     totalTarifa() {
-      let total = 0;
-      this.info.forEach((detalle) => {
-        total += detalle.tarifa;
-      });
+      let total = this.info.reduce((acc, detalle) => {
+        return +detalle.tarifa + acc;
+      }, 0);
+      return +total.toFixed(2);
+    },
+
+    totalTramite() {
+      let total = this.info.reduce((acc, detalle) => {
+        return +detalle.tramite + acc;
+      }, 0);
       return +total.toFixed(2);
     },
   },
