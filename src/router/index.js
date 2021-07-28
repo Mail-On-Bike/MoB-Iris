@@ -42,7 +42,7 @@ const routes = [
     },
   },
   {
-    path: "/equipo-Admin",
+    path: "/equipo-admin",
     name: "EquipoAdmin",
     component: () => import("@/views/EquipoAdmin.vue"),
     meta: {

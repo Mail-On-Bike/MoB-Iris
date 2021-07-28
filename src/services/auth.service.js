@@ -94,10 +94,18 @@ class AuthService {
     }
   }
 
-  async changePassword() {
+  async changePassword(id, change) {
     try {
-      let css;
-      console.log(css);
+      let cambiarPassword = await axios.put(
+        `${API_URL}/change-password/${id}`,
+        {
+          oldPassword: change.oldPassword,
+          newPassword: change.newPassword,
+        },
+        { headers: authHeader() }
+      );
+
+      return cambiarPassword.data;
     } catch (error) {
       console.error(
         `Error al obtener los miembros del Equipo Admin: ${error.message}`

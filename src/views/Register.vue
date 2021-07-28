@@ -159,7 +159,6 @@ export default {
   },
   methods: {
     async handleRegister() {
-      console.log(this.user);
       try {
         const isValid = await this.$validator.validateAll();
 
@@ -168,13 +167,13 @@ export default {
         }
 
         const response = await AuthService.register(this.user);
-        console.log(response);
         this.alert.message = response.message;
         this.alert.show = true;
         this.alert.success = true;
 
         setTimeout(() => {
           this.alert.show = false;
+          this.$route.push("/equipo-admin");
         }, 1500);
       } catch (error) {
         console.log(`Error al crear nuevo usuario: ${error.response.message}`);
