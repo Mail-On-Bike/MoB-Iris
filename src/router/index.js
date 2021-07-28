@@ -25,6 +25,15 @@ const routes = [
     },
   },
   {
+    path: "/editar-user/:id",
+    name: "EditarUser",
+    component: () => import("@/views/EditarUser.vue"),
+    meta: {
+      requiresAuth: true,
+      isAdmin: true,
+    },
+  },
+  {
     path: "/perfil",
     name: "Perfil",
     component: () => import("@/views/Profile.vue"),

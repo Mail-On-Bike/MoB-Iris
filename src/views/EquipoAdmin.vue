@@ -17,6 +17,19 @@
       @cerrarBuscador="showAdvertencia = false"
     />
 
+    <div class="flex flex-row items-center justify-end mb-4 -mt-10">
+      <router-link
+        to="/register"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Nuevo Usuario</span
+        >
+      </router-link>
+    </div>
+
     <div class="overflow-y-auto max-h-96">
       <table class="table w-full border-collapse table-auto">
         <tr
@@ -27,7 +40,7 @@
           <th class="table-cell">Email</th>
           <th class="table-cell">Franquicia</th>
           <th class="table-cell">Roles</th>
-          <th class="table-cell">Restaurar Contraseña</th>
+          <th class="table-cell">Acciones</th>
         </tr>
 
         <tr
@@ -51,8 +64,22 @@
             {{ listarRoles(user.roles) }}
           </td>
           <td class="table-cell p-2 text-center border-2 border-secondary">
+            <router-link
+              :to="`/editar-user/${user.id}`"
+              custom
+              v-slot="{ navigate }"
+              class="px-2 font-bold text-white bg-green-600 rounded-xl"
+            >
+              <span
+                @click="navigate"
+                role="link"
+                class="text-center cursor-pointer"
+                >Editar</span
+              >
+            </router-link>
+
             <button
-              class="px-2 font-bold text-white bg-red-500 rounded-xl"
+              class="px-2 ml-2 font-bold text-white bg-red-500 rounded-xl"
               @click="openAdvertencia(user)"
             >
               Restaurar

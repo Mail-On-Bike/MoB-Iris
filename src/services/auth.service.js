@@ -62,6 +62,38 @@ class AuthService {
     }
   }
 
+  async editUser(id, userEditado) {
+    try {
+      let editarUser = await axios.put(
+        `${API_URL}/edit-user/${id}`,
+        {
+          fullName: userEditado.fullName,
+          username: userEditado.username,
+          empresa: userEditado.empresa,
+          email: userEditado.email,
+          roles: userEditado.roles,
+        },
+        { headers: authHeader() }
+      );
+
+      return editarUser.data;
+    } catch (error) {
+      console.error(`Error al editar el usuario: ${error.message}`);
+    }
+  }
+
+  async getUser(id) {
+    try {
+      let user = await axios.get(`${API_URL}/user/${id}`, {
+        headers: authHeader(),
+      });
+
+      return user.data;
+    } catch (error) {
+      console.error(`Error al obtener el usuario: ${error.message}`);
+    }
+  }
+
   async changePassword() {
     try {
       let css;
