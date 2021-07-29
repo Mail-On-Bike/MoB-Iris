@@ -227,6 +227,7 @@
             <input
               v-model.number="editarPedido.tarifa"
               type="number"
+              min="0"
               v-validate="'required'"
               name="tarifa"
               class="input"
@@ -487,6 +488,7 @@
             <input
               v-model.number="editarPedido.recaudo"
               type="number"
+              min="0"
               class="input"
             />
           </div>
@@ -496,6 +498,7 @@
             <input
               v-model.number="editarPedido.tramite"
               type="number"
+              min="0"
               class="input"
             />
           </div>

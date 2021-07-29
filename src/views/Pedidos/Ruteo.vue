@@ -546,8 +546,9 @@
                 <td>
                   <input
                     class="input input2"
+                    min="0"
                     type="number"
-                    v-model="pedidoIndividual.tarifa"
+                    v-model.number="pedidoIndividual.tarifa"
                     @input="changeTarifa"
                     @change="changeTarifa"
                   />
@@ -558,8 +559,9 @@
                 <td>
                   <input
                     class="input input2"
+                    min="0"
                     type="number"
-                    v-model="pedidoIndividual.recaudo"
+                    v-model.number="pedidoIndividual.recaudo"
                     @input="calcularRecaudo(pedidoIndividual)"
                     @change="changeRecaudo"
                   />
@@ -567,8 +569,9 @@
                 <td>
                   <input
                     class="input input2"
+                    min="0"
                     type="number"
-                    v-model="pedidoIndividual.tramite"
+                    v-model.number="pedidoIndividual.tramite"
                     @input="changeTramite"
                     @change="changeTramite"
                   />

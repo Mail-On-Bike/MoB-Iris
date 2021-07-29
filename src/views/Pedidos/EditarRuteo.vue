@@ -331,7 +331,7 @@
               <div style="min-height:200px;">
                 <table class="table-auto" style="max-height: 200px;">
                   <thead>
-                    <tr>
+                    <tr class="text-primary">
                       <th></th>
                       <th>ID Pedido</th>
                       <th>Destino</th>
@@ -418,7 +418,7 @@
             </button>
           </div>
           <table class="table-auto">
-            <thead class="text-primary">
+            <thead class="text-center text-primary">
               <tr>
                 <th>
                   <font-awesome-icon
@@ -459,22 +459,28 @@
                     v-model="pedidoIndividual.otroDatoConsignado"
                   />
                 </td>
-                <td>{{ pedidoIndividual.distancia }} km</td>
-                <td>
+                <td class="table-cell text-center">
+                  {{ pedidoIndividual.distancia }} km
+                </td>
+                <td class="table-cell text-center">
                   <input
                     class="input input2"
                     type="number"
-                    v-model="pedidoIndividual.tarifa"
+                    min="0"
+                    v-model.number="pedidoIndividual.tarifa"
                     @input="changeTarifa"
                     @change="changeTarifa"
                   />
                 </td>
-                <td>{{ pedidoIndividual.tarifaSugerida }}</td>
+                <td class="table-cell text-center">
+                  {{ pedidoIndividual.tarifaSugerida }}
+                </td>
                 <td>
                   <input
                     class="input input2"
                     type="number"
-                    v-model="pedidoIndividual.recaudo"
+                    min="0"
+                    v-model.number="pedidoIndividual.recaudo"
                     @input="calcularRecaudo(pedidoIndividual)"
                     @change="changeRecaudo"
                   />
@@ -483,7 +489,8 @@
                   <input
                     class="input input2"
                     type="number"
-                    v-model="pedidoIndividual.tramite"
+                    min="0"
+                    v-model.number="pedidoIndividual.tramite"
                     @input="changeTramite"
                     @change="changeTramite"
                   />
@@ -722,7 +729,7 @@ export default {
     ...mapActions("mobikers", ["obtenerComision"]),
 
     changeModalidad(modalidad, index) {
-      if (modalidad === "Con Retorno") {
+      if (modalidad.tipo === "Con Retorno") {
         if (this.pedidos[index].viajes !== 2) {
           if (this.pedido.tipoEnvio === "E-Commerce") {
             this.pedidos[index].tarifa *= 2;
@@ -735,7 +742,7 @@ export default {
         this.pedidos[index].viajes = 2;
         this.pedidos[index].distancia *= 2;
       }
-      if (modalidad === "Una vía") {
+      if (modalidad.tipo === "Una vía") {
         this.pedidos[index].viajes = 1;
         this.pedidos[index].tarifa = this.pedidos[index].tarifaMemoria;
         this.pedidos[index].distancia = this.pedidos[index].distanciaMemoria;
@@ -860,7 +867,7 @@ export default {
             row["distancia"] = info.distancia;
             row["distanciaMemoria"] = info.distancia;
             row["tarifa"] = info.tarifa;
-            row["tarifaMemoria"] = info.tarifaMemoria;
+            row["tarifaMemoria"] = +info.tarifa;
             row["tarifaSugerida"] = info.tarifaSugerida;
             row["CO2Ahorrado"] = info.CO2Ahorrado;
             row["ruido"] = info.ruido;
@@ -895,7 +902,7 @@ export default {
     },
 
     calcularRecaudo(pedido) {
-      if (pedido.recaudo !== 0) {
+      if (pedido.recaudo > 0) {
         pedido.tarifa = +(pedido.tarifaMemoria + 2);
       }
       if (pedido.recaudo === 0) {
@@ -1215,7 +1222,8 @@ export default {
         this.pedidos = data;
         this.showLoading = false;
       } catch (error) {
-        console.log(error);
+        console.error(error.message);
+        console.error(error);
       }
     },
 
@@ -1251,6 +1259,11 @@ export default {
             this.tarifaTotalSugerida +
             response.data.pedidosRuta[i].tarifaSugerida;
           this.distanciaTotal += response.data.pedidosRuta[i].distancia;
+
+          response.data.pedidosRuta[i].tarifaMemoria =
+            response.data.pedidosRuta[i].tarifa;
+          response.data.pedidosRuta[i].distanciaMemoria =
+            response.data.pedidosRuta[i].distancia;
         }
 
         this.pedidos = response.data.pedidosRuta;
