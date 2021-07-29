@@ -235,6 +235,11 @@ export default {
 
     this.currentTab = this.tabs[tabNames.detalles];
   },
+  computed: {
+    contarMoBikers() {
+      return this.mobikersFiltrados.length;
+    },
+  },
   methods: {
     async retrievePedidosMobikers(id) {
       try {

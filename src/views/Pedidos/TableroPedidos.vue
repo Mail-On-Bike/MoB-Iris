@@ -592,13 +592,14 @@ export default {
       this.currentIndex = index;
     },
 
-    refreshList() {
+    async refreshList() {
       this.page = 1;
-      this.retrievePedidos();
+      await this.retrievePedidos();
       this.pedidosFiltrados = this.pedidos;
 
       this.currentPedido = null;
       this.currentIndex = -1;
+      this.buscador = "";
     },
 
     openComandaRuteo(ruta) {

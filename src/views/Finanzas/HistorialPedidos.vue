@@ -372,11 +372,12 @@ export default {
       this.currentIndex = index;
     },
 
-    refreshList() {
-      this.retrievePedidos();
+    async refreshList() {
+      await this.retrievePedidos();
 
       this.currentPedido = null;
       this.currentIndex = -1;
+      this.buscador = "";
     },
 
     sortPorId() {
