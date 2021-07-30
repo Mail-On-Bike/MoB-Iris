@@ -166,7 +166,8 @@
           }"
           v-for="mobiker in mobikersFiltrados"
           :title="
-            `Bicicleta: ${mobiker.mobiker.tipoBicicleta} - Equipo: ${mobiker.mobiker.equipo}`
+            `Dirección: ${mobiker.mobiker.direccion}, Distrito: ${mobiker.mobiker.distrito.distrito}
+            Bicicleta: ${mobiker.mobiker.tipoBicicleta} - Equipo: ${mobiker.mobiker.equipo}`
           "
           :key="mobiker.id"
           @click="checkPedidosMobikers(mobiker.mobiker, mobiker.mobiker.id)"
