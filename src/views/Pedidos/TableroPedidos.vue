@@ -469,11 +469,11 @@ export default {
     totalPedidosDelDia() {
       let total = this.pedidos.reduce((acc, pedido) => {
         if (pedido.statusId !== 6) {
-          return acc + pedido.viajes;
+          return acc + +pedido.viajes;
         }
       }, 0);
 
-      return total;
+      return +total;
     },
   },
   methods: {
