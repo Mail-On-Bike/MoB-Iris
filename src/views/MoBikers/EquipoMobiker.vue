@@ -51,13 +51,13 @@
 
     <div class="flex justify-around w-1/2 px-2 my-2 ml-4">
       <button @click="filtrarMobiker('Activo')" class="mob-activo">
-        Activos
+        Activos ({{ contarMoBikersActivos }})
       </button>
       <button @click="filtrarMobiker('Inactivo')" class="mob-inactivo">
-        Inactivos
+        Inactivos ({{ contarMoBikersInactivos }})
       </button>
       <button @click="filtrarMobiker('Retirado')" class="mob-retirado">
-        Retirados
+        Retirados ({{ contarMoBikersRetirados }})
       </button>
     </div>
 
@@ -207,6 +207,7 @@ const tabNames = {
 export default {
   data() {
     return {
+      mobikers: [],
       mobikersFiltrados: [],
       pedidosMobiker: [],
       currentMobiker: null,
@@ -232,12 +233,27 @@ export default {
   },
   async mounted() {
     this.mobikersFiltrados = await MobikerService.filterMobikers("Activo");
+    await this.getAllMobikers();
 
     this.currentTab = this.tabs[tabNames.detalles];
   },
   computed: {
-    contarMoBikers() {
-      return this.mobikersFiltrados.length;
+    contarMoBikersActivos() {
+      return this.mobikers.filter((mob) => {
+        return mob.status === "Activo";
+      }).length;
+    },
+
+    contarMoBikersInactivos() {
+      return this.mobikers.filter((mob) => {
+        return mob.status === "Inactivo";
+      }).length;
+    },
+
+    contarMoBikersRetirados() {
+      return this.mobikers.filter((mob) => {
+        return mob.status === "Retirado";
+      }).length;
     },
   },
   methods: {
@@ -248,6 +264,16 @@ export default {
       } catch (error) {
         console.error(
           `No se pudieron obtener los pedidos del MoBiker: ${error.message}`
+        );
+      }
+    },
+
+    async getAllMobikers() {
+      try {
+        this.mobikers = await MobikerService.getMobikers();
+      } catch (error) {
+        console.error(
+          `No se pudieron obtener todos los MoBikers: ${error.message}`
         );
       }
     },
@@ -265,6 +291,7 @@ export default {
         this.currentMobiker = null;
         this.currentIndex = -1;
         this.buscador = "";
+        await this.getAllMobikers();
         this.loading = false;
       } catch (error) {
         console.error(`Error al refrescar la lista: ${error.message}`);
@@ -280,6 +307,9 @@ export default {
 
     async filtrarMobiker(status) {
       this.loading = true;
+      this.currentMobiker = null;
+      this.currentIndex = -1;
+      this.buscador = "";
       this.mobikersFiltrados = await MobikerService.filterMobikers(status);
       this.loading = false;
     },

@@ -192,6 +192,7 @@
             :monday-first="true"
             :language="es"
             format="dd MMMM yyyy"
+            :typeable="true"
           />
           <div
             v-if="errors.has('fechaNacimiento')"
@@ -281,6 +282,7 @@
             :monday-first="true"
             :language="es"
             format="dd MMMM yyyy"
+            :typeable="true"
           />
           <div
             v-if="errors.has('fechaIngreso')"
@@ -408,6 +410,7 @@ export default {
         { equipo: "Caja Térmica" },
         { equipo: "Jaba/Canastilla" },
         { equipo: "Mochila" },
+        { equipo: "Mochila MoB" },
       ],
       cuentaBancaria: [
         { cuenta: "Sin Cuenta" },
