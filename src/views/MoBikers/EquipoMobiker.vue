@@ -8,6 +8,13 @@
       </h1>
     </div>
 
+    <div class="hidden" ref="stats">
+      <MensajeEstadisticas
+        v-if="currentMobiker"
+        :estadisticas="currentMobiker"
+      />
+    </div>
+
     <div class="flex flex-row mb-4 -mt-10 justify-evenly">
       <div>
         <input
@@ -71,7 +78,7 @@
         <p>Bicienvios</p>
         <p>Rango</p>
         <p>Estado</p>
-        <p>Editar</p>
+        <p>Acciones</p>
       </div>
 
       <div
@@ -168,6 +175,13 @@
                 role="link"
               />
             </router-link>
+
+            <button class="ml-3" @click="statsMob(mobiker, mobiker.id)">
+              <font-awesome-icon
+                class="text-2xl text-primary"
+                icon="chart-bar"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -194,6 +208,7 @@
 <script>
 import MobikerService from "@/services/mobiker.service";
 import MoBDetalles from "@/components/MoBDetalles.vue";
+import MensajeEstadisticas from "@/components/MensajeEstadisticas.vue";
 import BaseBiciEnvios from "@/components/BaseBiciEnvios.vue";
 import BaseEcoamigable from "@/components/BaseEcoamigable.vue";
 import Loading from "@/components/Loading";
@@ -223,6 +238,8 @@ export default {
       },
       activeTabName: null,
       loading: false,
+
+      statsCopiadas: false,
     };
   },
   components: {
@@ -230,6 +247,7 @@ export default {
     BaseBiciEnvios,
     BaseEcoamigable,
     Loading,
+    MensajeEstadisticas,
   },
   async mounted() {
     this.mobikersFiltrados = await MobikerService.filterMobikers("Activo");
@@ -298,11 +316,16 @@ export default {
       }
     },
 
-    setActiveMobiker(mobiker, index) {
+    async setActiveMobiker(mobiker, index) {
       this.currentMobiker = mobiker;
       this.currentIndex = index;
-      this.handleTabClick(tabNames.detalles);
-      this.retrievePedidosMobikers(index);
+      await this.handleTabClick(tabNames.detalles);
+      await this.retrievePedidosMobikers(index);
+    },
+
+    async statsMob(mobiker, index) {
+      await this.setActiveMobiker(mobiker, index);
+      await this.copiarEstadisticas();
     },
 
     async filtrarMobiker(status) {
@@ -330,6 +353,14 @@ export default {
       } catch (error) {
         console.error(`Error en el buscador de MoBikers: ${error.message}`);
       }
+    },
+
+    copiarEstadisticas() {
+      console.log(this.$refs.stats.innerText);
+      this.$copyText(this.$refs.stats.innerText).then(() => {
+        this.statsCopiadas = true;
+        console.log("Texto copiado");
+      });
     },
   },
 };

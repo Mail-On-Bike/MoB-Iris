@@ -32,9 +32,6 @@ export default {
     estadisticas: Object,
     pedidos: Array,
   },
-  data() {
-    return {};
-  },
   methods: {
     contarEcommerce(pedidos) {
       let contadorEcommerce = pedidos.reduce((acc, pedido) => {
