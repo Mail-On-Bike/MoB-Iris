@@ -1,3 +1,5 @@
+import Util from "./util.service";
+
 export default function calcularTarifa(
   distancia,
   tipoEnvio,
@@ -10,6 +12,11 @@ export default function calcularTarifa(
 
   const zonaCobertura = JSON.parse(localStorage.getItem("zonaCobertura")).map(
     (key) => key.distrito.split(" *")[0]
+  );
+  const regexObj = new RegExp(distrito, "ig");
+
+  const isZonaCobertura = zonaCobertura.find((item) =>
+    Util.removeAccents(item).match(regexObj)
   );
 
   const distanciaBase = 3.75;
@@ -32,7 +39,7 @@ export default function calcularTarifa(
               );
         break;
       }
-      if (zonaCobertura.includes(distrito)) {
+      if (isZonaCobertura) {
         tarifaBase = 7;
         tarifa = modalidad === "Con Retorno" ? tarifaBase * 2 : tarifaBase;
         tarifaSugerida =
