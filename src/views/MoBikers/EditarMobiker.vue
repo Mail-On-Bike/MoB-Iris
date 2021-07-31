@@ -192,7 +192,6 @@
             :monday-first="true"
             :language="es"
             format="dd MMMM yyyy"
-            :typeable="true"
           />
           <div
             v-if="errors.has('fechaNacimiento')"
@@ -282,7 +281,6 @@
             :monday-first="true"
             :language="es"
             format="dd MMMM yyyy"
-            :typeable="true"
           />
           <div
             v-if="errors.has('fechaIngreso')"
