@@ -1030,6 +1030,13 @@ export default {
         for (let i = 0; i < this.pedidos.length; i++) {
           this.nuevoPedido.operador = this.$store.getters.operador;
           if (this.pedidos[i].id) {
+            const comision = await this.obtenerComision(
+              this.nuevoPedido.mobiker
+            );
+            this.nuevoPedido.comision = +(
+              this.pedidos[i].tarifa * comision
+            ).toFixed(2);
+
             let pedidoExtendido = {
               fecha: this.nuevoPedido.fecha,
               contactoRemitente: this.nuevoPedido.contactoRemitente,
@@ -1070,6 +1077,13 @@ export default {
               pedidoExtendido
             );
           } else {
+            const comision = await this.obtenerComision(
+              this.nuevoPedido.mobiker
+            );
+            this.nuevoPedido.comision = +(
+              this.pedidos[i].tarifa * comision
+            ).toFixed(2);
+
             let pedidoExtendido = {
               fecha: this.nuevoPedido.fecha,
               contactoRemitente: this.nuevoPedido.contactoRemitente,

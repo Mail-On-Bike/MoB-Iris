@@ -985,6 +985,7 @@ export default {
         for (let i = 0; i < this.pedidos.length; i++) {
           if (this.pedidos[i].id) {
             this.pedido.operador = this.$store.getters.operador;
+
             let pedidoExtendido = {
               fecha: this.pedido.fecha,
               contactoRemitente: this.pedido.contactoRemitente,
@@ -1031,6 +1032,11 @@ export default {
             );
           } else {
             this.pedido.operador = this.$store.getters.operador;
+            const comision = await this.obtenerComision(this.pedido.mobiker);
+            this.pedido.comision = +(this.pedidos[i].tarifa * comision).toFixed(
+              2
+            );
+
             let pedidoExtendido = {
               fecha: this.pedido.fecha,
               contactoRemitente: this.pedido.contactoRemitente,
