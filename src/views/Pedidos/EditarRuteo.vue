@@ -297,6 +297,114 @@
         </div>
         <!-- <input type="file" @change="onFileChanged" multiple /> -->
 
+        <!-- FORMULARIO DESTINO -->
+        <div class="grid grid-cols-6 gap-2 p-2">
+          <div>
+            <label for="contactoConsignado" class="label-input">Contacto</label>
+            <input
+              v-model="nuevoDestinoIndividual.contactoConsignado"
+              type="text"
+              name="contactoConsignado"
+              class="input"
+            />
+            <div
+              v-if="errors.has('contactoConsignado')"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>El contacto es requerido</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="empresaConsignado" class="label-input">Empresa</label>
+            <input
+              v-model="nuevoDestinoIndividual.empresaConsignado"
+              type="text"
+              name="empresaConsignado"
+              class="input"
+            />
+          </div>
+
+          <div>
+            <label for="telefonoConsignado" class="label-input">Teléfono</label>
+            <input
+              v-model="nuevoDestinoIndividual.telefonoConsignado"
+              type="string"
+              name="telefonoConsignado"
+              class="input"
+            />
+          </div>
+
+          <div class="col-span-2">
+            <label for="direccionConsignado" class="label-input"
+              >Dirección</label
+            >
+            <input
+              v-model="nuevoDestinoIndividual.direccionConsignado"
+              type="text"
+              name="direccionConsignado"
+              class="input"
+            />
+          </div>
+
+          <div>
+            <label for="distritoConsignado" class="label-input">Distrito</label>
+            <model-list-select
+              name="distritoConsignado"
+              v-model="nuevoDestinoIndividual.distritoConsignado"
+              placeholder="Buscar distrito..."
+              :list="distritos"
+              option-text="distrito"
+              option-value="distrito"
+            />
+          </div>
+
+          <div>
+            <label for="tipoEnvio" class="label-input">Tipo de Envío</label>
+            <model-list-select
+              name="tipoEnvio"
+              v-model="nuevoDestinoIndividual.tipoEnvio"
+              :list="tiposDeEnvio"
+              option-text="tipo"
+              option-value="tipo"
+            />
+          </div>
+
+          <div>
+            <label for="modalidad" class="label-input">Modalidad</label>
+            <model-list-select
+              name="modalidad"
+              v-model="nuevoDestinoIndividual.modalidad"
+              :list="modalidades"
+              option-text="tipo"
+              option-value="tipo"
+            />
+          </div>
+          <div class="col-span-3">
+            <label for="otroDatoConsignado" class="label-input"
+              >Otro Dato</label
+            >
+            <input
+              v-model="nuevoDestinoIndividual.otroDatoConsignado"
+              type="text"
+              class="input"
+            />
+          </div>
+          <div></div>
+        </div>
+        <div
+          style="display:flex; padding: 10px 0px 20px; justify-content:center;"
+        >
+          <button
+            type="button"
+            class="block px-6 py-2 font-bold text-white transition duration-200 bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl focus:outline-none"
+            @click="agregarDestinoManual()"
+          >
+            Agregar Destino
+          </button>
+        </div>
+        <!-- <input type="file" @change="onFileChanged" multiple /> -->
+
         <div style="width: 100%; min-height: 650px">
           <div
             class="grid grid-cols-2 gap-2 p-2"
@@ -451,7 +559,9 @@
                 <td>{{ pedidoIndividual.contactoConsignado }}</td>
                 <td>{{ pedidoIndividual.telefonoConsignado }}</td>
                 <td>{{ pedidoIndividual.direccionConsignado }}</td>
-                <td>{{ pedidoIndividual.distrito.distrito }}</td>
+                <td>
+                  {{ pedidoIndividual.distrito.distrito }}
+                </td>
                 <td>
                   <input
                     class="input input2"
@@ -661,6 +771,15 @@ export default {
       seleccionarTodosLosPedidos: false,
       comentarioAnulados: "",
       showModalComentarioAnulados: false,
+      nuevoDestinoIndividual: {
+        contactoConsignado: "",
+        direccionConsignado: "",
+        telefonoConsignado: "",
+        empresaConsignado: "",
+        distritoConsignado: null,
+        tipoEnvio: "E-Commerce",
+        modalidad: "Una vía",
+      },
     };
   },
   mounted() {
@@ -985,6 +1104,10 @@ export default {
         for (let i = 0; i < this.pedidos.length; i++) {
           if (this.pedidos[i].id) {
             this.pedido.operador = this.$store.getters.operador;
+            const comision = await this.obtenerComision(this.pedido.mobiker);
+            this.pedido.comision = +(this.pedidos[i].tarifa * comision).toFixed(
+              2
+            );
 
             let pedidoExtendido = {
               fecha: this.pedido.fecha,
@@ -999,7 +1122,7 @@ export default {
               direccionConsignado: this.pedidos[i].direccionConsignado,
               telefonoConsignado: this.pedidos[i].telefonoConsignado,
               otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
-              distrito: { distrito: this.pedidos[i].distrito.distrito },
+              distritoConsignado: this.pedidos[i].distrito.distrito,
               tipoCarga: this.pedido.tipoCarga,
               formaPago: this.pedido.formaPago,
               tarifa: this.pedidos[i].tarifa,
@@ -1026,6 +1149,7 @@ export default {
               this.showLoading = false;
               return;
             }
+            console.log(this.pedidos[i].id);
             response = await PedidoService.editPedido(
               this.pedidos[i].id,
               pedidoExtendido
@@ -1147,6 +1271,62 @@ export default {
         }
       } catch (error) {
         console.error("Mensaje de error: ", error.message);
+      }
+    },
+
+    async agregarDestinoManual() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) {
+        return;
+      }
+      if (
+        this.nuevoDestinoIndividual.contacto != "" &&
+        this.nuevoDestinoIndividual.telefonoConsignado != "" &&
+        this.nuevoDestinoIndividual.direccionConsignado != "" &&
+        this.nuevoDestinoIndividual.distritoConsignado != "" &&
+        this.nuevoDestinoIndividual.tipoDeEnvio != ""
+      ) {
+        console.log("LLEGA");
+        this.showLoading = true;
+        let destino = this.nuevoDestinoIndividual;
+
+        let info = await this.calcularDistancia(
+          this.nuevoDestinoIndividual.direccionConsignado,
+          this.nuevoDestinoIndividual.distritoConsignado
+        );
+        destino["empresaConsignado"] = "";
+        destino["distancia"] = info.distancia;
+        destino["distanciaMemoria"] = info.distancia;
+        destino["tarifa"] = info.tarifa;
+        destino["tarifaMemoria"] = info.tarifaMemoria;
+        destino["tarifaSugerida"] = info.tarifaSugerida;
+        destino["CO2Ahorrado"] = info.CO2Ahorrado;
+        destino["ruido"] = info.ruido;
+        destino["recaudo"] = 0;
+        destino["tramite"] = 0;
+        destino["modalidad"] = "Una vía";
+        destino["viajes"] = 1;
+        destino.distrito = { distrito: destino["distritoConsignado"] };
+        destino.modalidad = { tipo: destino["modalidad"] };
+        this.pedidos.push(destino);
+        this.actualizarSumas();
+        this.showLoading = false;
+
+        this.nuevoDestinoIndividual = {
+          contactoConsignado: "",
+          direccionConsignado: "",
+          telefonoConsignado: "",
+          empresaConsignado: "",
+          distritoConsignado: null,
+          tipoEnvio: "E-Commerce",
+          modalidad: "Una vía",
+        };
+      } else {
+        this.alert.message = "Debes de llenar todos los campos del destino!";
+        this.alert.show = true;
+        this.alert.success = false;
+
+        setTimeout(() => (this.alert.show = false), 2000);
       }
     },
 

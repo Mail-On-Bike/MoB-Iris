@@ -710,7 +710,7 @@ export default {
         direccionConsignado: "",
         telefonoConsignado: "",
         empresaConsignado: "",
-        distritoConsignado: "",
+        distritoConsignado: null,
         tipoEnvio: "E-Commerce",
         modalidad: "Una vía",
       },
@@ -1003,7 +1003,7 @@ export default {
           direccionConsignado: "",
           telefonoConsignado: "",
           empresaConsignado: "",
-          distritoConsignado: "",
+          distritoConsignado: null,
           tipoEnvio: "E-Commerce",
           modalidad: "Una vía",
         };
