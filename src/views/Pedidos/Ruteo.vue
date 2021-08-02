@@ -473,7 +473,13 @@
                       <td>
                         {{ pedidoIndividualNoAgregado.telefonoConsignado }}
                       </td>
-                      <td>{{ pedidoIndividualNoAgregado.fecha }}</td>
+                      <td>
+                        {{
+                          $date(pedidoIndividualNoAgregado.fecha).format(
+                            "DD MMM YYYY"
+                          )
+                        }}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -923,7 +929,8 @@ export default {
 
             let info = await this.calcularDistancia(
               row.direccionConsignado.trim(),
-              row.distritoConsignado.trim()
+              row.distritoConsignado.trim(),
+              this.nuevoPedido.modalidad
             );
             row["empresaConsignado"] = "";
             row["distancia"] = info.distancia;
@@ -980,10 +987,10 @@ export default {
 
         let info = await this.calcularDistancia(
           this.nuevoDestinoIndividual.direccionConsignado,
-          this.nuevoDestinoIndividual.distritoConsignado
+          this.nuevoDestinoIndividual.distritoConsignado,
+          this.nuevoDestinoIndividual.modalidad
         );
         destino["empresaConsignado"] = "";
-        destino["distancia"] = info.distancia;
         destino["distanciaMemoria"] = info.distancia;
         destino["tarifa"] = info.tarifa;
         destino["tarifaMemoria"] = info.tarifaMemoria;
@@ -992,8 +999,16 @@ export default {
         destino["ruido"] = info.ruido;
         destino["recaudo"] = 0;
         destino["tramite"] = 0;
-        destino["modalidad"] = "Una vía";
-        destino["viajes"] = 1;
+        destino["modalidad"] = this.nuevoDestinoIndividual.modalidad;
+
+        if (this.nuevoDestinoIndividual.modalidad === "Una vía") {
+          destino["distancia"] = info.distancia;
+          destino["viajes"] = 1;
+        } else {
+          destino["distancia"] = info.distancia * 2;
+          destino["viajes"] = 2;
+        }
+
         this.pedidos.push(destino);
         this.actualizarSumas();
         this.showLoading = false;
@@ -1119,7 +1134,6 @@ export default {
               ruteo: this.ruteoId,
             };
 
-            console.log(pedidoExtendido);
             response = await PedidoService.storageNuevoPedido(pedidoExtendido);
           }
         }
@@ -1152,7 +1166,7 @@ export default {
       return response;
     },
 
-    async calcularDistancia(direccion = null, distrito = null) {
+    async calcularDistancia(direccion = null, distrito = null, modalidad) {
       let data = {
         distancia: null,
         tarifa: null,
@@ -1173,7 +1187,7 @@ export default {
           const response = calcularTarifa(
             data.distancia,
             this.nuevoPedido.tipoEnvio,
-            this.nuevoPedido.modalidad,
+            modalidad,
             distrito
           );
 
@@ -1255,6 +1269,7 @@ export default {
             data[i].distritoConsignado
           );
           data[i]["distancia"] = info.distancia;
+          data[i]["distanciaMemoria"] = info.distancia;
           data[i]["tarifa"] = info.tarifa;
           data[i]["tarifaMemoria"] = info.tarifaMemoria;
           data[i]["tarifaSugerida"] = info.tarifaSugerida;
@@ -1275,7 +1290,8 @@ export default {
         this.pedidos = data;
         this.showLoading = false;
       } catch (error) {
-        console.log(error);
+        console.error(error.message);
+        console.error(error);
       }
     },
 

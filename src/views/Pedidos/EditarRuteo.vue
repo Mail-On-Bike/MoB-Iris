@@ -1231,7 +1231,7 @@ export default {
       return response;
     },
 
-    async calcularDistancia(direccion = null, distrito = null) {
+    async calcularDistancia(direccion = null, distrito = null, modalidad) {
       let data = {
         distancia: null,
         tarifa: null,
@@ -1252,7 +1252,7 @@ export default {
           const response = calcularTarifa(
             data.distancia,
             this.pedido.tipoEnvio,
-            this.pedido.modalidad,
+            modalidad,
             distrito
           );
 
@@ -1292,10 +1292,10 @@ export default {
 
         let info = await this.calcularDistancia(
           this.nuevoDestinoIndividual.direccionConsignado,
-          this.nuevoDestinoIndividual.distritoConsignado
+          this.nuevoDestinoIndividual.distritoConsignado,
+          this.nuevoDestinoIndividual.modalidad
         );
         destino["empresaConsignado"] = "";
-        destino["distancia"] = info.distancia;
         destino["distanciaMemoria"] = info.distancia;
         destino["tarifa"] = info.tarifa;
         destino["tarifaMemoria"] = info.tarifaMemoria;
@@ -1304,10 +1304,17 @@ export default {
         destino["ruido"] = info.ruido;
         destino["recaudo"] = 0;
         destino["tramite"] = 0;
-        destino["modalidad"] = "Una vía";
         destino["viajes"] = 1;
         destino.distrito = { distrito: destino["distritoConsignado"] };
-        destino.modalidad = { tipo: destino["modalidad"] };
+        destino.modalidad = { tipo: this.nuevoDestinoIndividual.modalidad };
+
+        if (this.nuevoDestinoIndividual.modalidad === "Una vía") {
+          destino["distancia"] = info.distancia;
+          destino["viajes"] = 1;
+        } else {
+          destino["distancia"] = info.distancia * 2;
+          destino["viajes"] = 2;
+        }
         this.pedidos.push(destino);
         this.actualizarSumas();
         this.showLoading = false;
