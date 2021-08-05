@@ -799,13 +799,6 @@ export default {
           this.nuevoPedido.distritoConsignado
         );
 
-        this.distanciaMemoria = this.nuevoPedido.distancia;
-        if (this.nuevoPedido.modalidad === "Con Retorno") {
-          this.nuevoPedido.distancia = this.distanciaMemoria * 2;
-        } else {
-          this.nuevoPedido.distancia = this.distanciaMemoria;
-        }
-
         if (
           this.nuevoPedido.distancia === null ||
           this.nuevoPedido.distancia === undefined ||
@@ -827,6 +820,13 @@ export default {
           this.nuevoPedido.modalidad,
           this.nuevoPedido.distritoConsignado
         );
+
+        this.distanciaMemoria = this.nuevoPedido.distancia;
+        if (this.nuevoPedido.modalidad === "Con Retorno") {
+          this.nuevoPedido.distancia = this.distanciaMemoria * 2;
+        } else {
+          this.nuevoPedido.distancia = this.distanciaMemoria;
+        }
 
         this.nuevoPedido.tarifa = response.tarifa;
         this.tarifaMemoria = response.tarifa;

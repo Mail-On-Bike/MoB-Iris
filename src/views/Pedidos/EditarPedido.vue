@@ -730,13 +730,6 @@ export default {
           this.editarPedido.distritoConsignado
         );
 
-        this.distanciaMemoria = this.editarPedido.distancia;
-        if (this.editarPedido.modalidad === "Con Retorno") {
-          this.editarPedido.distancia = this.distanciaMemoria * 2;
-        } else {
-          this.editarPedido.distancia = this.distanciaMemoria;
-        }
-
         if (
           this.editarPedido.distancia === null ||
           this.editarPedido.distancia === undefined ||
@@ -758,6 +751,13 @@ export default {
           this.editarPedido.modalidad,
           this.editarPedido.distritoConsignado
         );
+
+        this.distanciaMemoria = this.editarPedido.distancia;
+        if (this.editarPedido.modalidad === "Con Retorno") {
+          this.editarPedido.distancia = this.distanciaMemoria * 2;
+        } else {
+          this.editarPedido.distancia = this.distanciaMemoria;
+        }
 
         this.editarPedido.tarifa = response.tarifa;
         this.tarifaMemoria = response.tarifa;
