@@ -639,7 +639,6 @@ export default {
     },
 
     "editarPedido.modalidad": function() {
-      console.log(this.editarPedido.modalidad);
       if (this.editarPedido.modalidad.tipo === "Con Retorno") {
         this.editarPedido.viajes = 2;
         this.editarPedido.distancia *= 2;

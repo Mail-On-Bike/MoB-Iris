@@ -684,6 +684,10 @@ export default {
         this.nuevoPedido.operador = this.$store.getters.operador;
         this.nuevoPedido.isRuteo = false;
 
+        // Acomodando Fechas
+        this.nuevoPedido.fecha = new Date(
+          new Date(this.nuevoPedido.fecha).getTime() - 1000 * 60 * 60 * 5
+        );
         const response = await PedidoService.storageNuevoPedido(
           this.nuevoPedido
         );

@@ -1099,6 +1099,10 @@ export default {
               this.pedidos[i].tarifa * comision
             ).toFixed(2);
 
+            // Acomodando Fechas
+            this.nuevoPedido.fecha = new Date(
+              new Date(this.nuevoPedido.fecha).getTime() - 1000 * 60 * 60 * 5
+            );
             let pedidoExtendido = {
               fecha: this.nuevoPedido.fecha,
               contactoRemitente: this.nuevoPedido.contactoRemitente,
