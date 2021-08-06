@@ -51,6 +51,15 @@ const routes = [
     },
   },
   {
+    path: "/nuevo-usuario-cliente",
+    name: "NuevoUsuarioCliente",
+    component: () => import("@/views/UsuariosClientes/NuevoUsuarioCliente.vue"),
+    meta: {
+      requiresAuth: true,
+      isAdmin: true,
+    },
+  },
+  {
     path: "/pedidos/tablero-pedidos",
     name: "TableroPedidos",
     component: () => import("@/views/Pedidos/TableroPedidos.vue"),

@@ -85,6 +85,7 @@ export default {
       linksDropMenu: [
         { title: "Mi Perfil", link: "/perfil" },
         { title: "Crear usuario", link: "/register" },
+        { title: "Crear usuario Cliente", link: "/nuevo-usuario-cliente" },
         { title: "Equipo MoB Admin", link: "/equipo-admin" },
         // { title: "Mis Estadísticas", link: "/register" },
       ],
@@ -129,18 +130,6 @@ export default {
     clickExterno() {
       this.dropMenu = false;
     },
-    // async actualizarDatos() {
-    // 	try {
-    // 		console.log("Actualizando datos");
-    // 		// MoBikers
-    // 		await this.$store.dispatch("mobikers/getMobikers");
-    // 		await this.$store.dispatch("clientes/getClientes");
-    // 		this.dropMenu = false;
-    // 		console.log("Datos perfectamente cargados");
-    // 	} catch (error) {
-    // 		console.error(`Error al cargar los datos. ${error.message}`);
-    // 	}
-    // },
   },
 };
 </script>
