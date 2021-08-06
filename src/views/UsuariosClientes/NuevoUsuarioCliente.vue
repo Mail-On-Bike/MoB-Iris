@@ -8,8 +8,27 @@
       </h1>
     </div>
 
+    <div class="flex flex-row justify-around px-4 mx-auto -mt-12">
+      <div>
+        <button
+          class="px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
+          @click="showBuscador = true"
+        >
+          Buscar cliente
+        </button>
+      </div>
+    </div>
+
+    <div class="overlay" v-if="showBuscador"></div>
+
+    <BuscadorCliente
+      :showBuscador="showBuscador"
+      @cerrarBuscador="showBuscador = false"
+      @activarCliente="setEmpresa"
+    />
+
     <form
-      class="-mt-10"
+      class="mt-6"
       @submit.prevent="handleNuevoUserCliente"
       autocomplete="off"
     >
@@ -121,9 +140,11 @@
           <input
             v-model="nuevoUserCliente.empresa"
             v-validate="'required'"
+            readonly
             type="text"
             name="empresa"
             class="input"
+            placeholder="Seleccione un Cliente"
           />
           <div
             v-if="errors.has('empresa')"
@@ -160,15 +181,18 @@
 import BaseAlerta from "@/components/BaseAlerta.vue";
 import UserCliente from "@/models/userCliente";
 import UserClienteService from "@/services/userCliente.service";
+import BuscadorCliente from "@/components/BuscadorCliente";
 
 export default {
   name: "NuevoUsuarioCliente",
   components: {
     BaseAlerta,
+    BuscadorCliente,
   },
   data() {
     return {
       nuevoUserCliente: new UserCliente("", "", "", "", "", "", "cliente"),
+      showBuscador: false,
       alert: {
         message: "",
         success: false,
@@ -203,6 +227,12 @@ export default {
         this.alert.show = true;
         this.alert.success = false;
         setTimeout(() => (this.alert.show = false), 2500);
+      }
+    },
+
+    setEmpresa(cliente) {
+      if (cliente) {
+        this.nuevoUserCliente.empresa = cliente.razonComercial;
       }
     },
 
