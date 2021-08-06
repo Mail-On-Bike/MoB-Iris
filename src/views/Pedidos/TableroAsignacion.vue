@@ -374,7 +374,7 @@ import Pagination from "@/components/Pagination.vue";
 import Loading from "@/components/Loading";
 import { es } from "vuejs-datepicker/dist/locale";
 
-const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
+// const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
 const manana = new Date().getTime() + 1000 * 60 * 60 * 24;
 
 export default {
@@ -403,7 +403,7 @@ export default {
       currentIndex: -1,
       currentRuta: null,
       currentRutaIndex: -1,
-      fechaInicio: new Date(seisDiasAtras),
+      fechaInicio: new Date(),
       fechaFin: new Date(manana),
       pedidosPorAsignar: 0,
       pedidosArray: [],
