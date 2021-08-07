@@ -806,7 +806,8 @@ export default {
           this.nuevoPedido.distancia >= 100
         ) {
           this.nuevoPedido.distancia = null;
-          this.alert.message = "No se ha podido calcular la distancia...";
+          this.alert.message =
+            "No se ha podido calcular la distancia... Revisa las direcciones";
           this.alert.show = true;
           this.alert.success = false;
           this.errorCalcularDistancia = true;
