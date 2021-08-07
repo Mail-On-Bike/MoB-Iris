@@ -137,6 +137,21 @@ class ClienteService {
       console.error("Mensaje de error: ", error.message);
     }
   }
+
+  async getStatsCliente(id) {
+    try {
+      let clientes = await axios.get(
+        `${API_URL}/stats-actuales-cliente/${id}`,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      return clientes.data;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
 }
 
 export default new ClienteService();

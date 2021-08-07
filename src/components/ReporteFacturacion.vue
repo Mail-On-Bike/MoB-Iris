@@ -22,7 +22,7 @@
       <h2
         class="absolute right-0 inline-block px-6 pt-1 text-xl font-bold text-center bg-white top-1 text-primary rounded-t-xl"
       >
-        {{ cliente.tipoDeComprobante.tipo }}
+        Comprobante: {{ cliente.tipoDeComprobante.tipo }}
       </h2>
     </div>
 
@@ -60,24 +60,28 @@
         <p>
           Mis BiciEnvíos =
           <span class="cursor-pointer select-all">{{
-            cliente.biciEnvios
+            statsCliente.pedidosCliente
           }}</span>
         </p>
         <p>
           Mis Kilómetros =
-          <span class="cursor-pointer select-all">{{ cliente.kilometros }}</span
+          <span class="cursor-pointer select-all">{{
+            statsCliente.kilometrosCliente
+          }}</span
           >km
         </p>
         <p>
           CO2 Ahorrado =
           <span class="cursor-pointer select-all">{{
-            cliente.CO2Ahorrado
+            statsCliente.co2Cliente
           }}</span
           >kg
         </p>
         <p>
           Horas de Ruido Ahorrado =
-          <span class="cursor-pointer select-all">{{ cliente.ruido }}</span
+          <span class="cursor-pointer select-all">{{
+            statsCliente.ruidoCliente
+          }}</span
           >h
         </p>
       </div>
@@ -125,6 +129,9 @@ export default {
       type: Boolean,
     },
     cliente: {
+      type: Object,
+    },
+    statsCliente: {
       type: Object,
     },
   },

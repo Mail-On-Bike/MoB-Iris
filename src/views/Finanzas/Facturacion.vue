@@ -17,6 +17,7 @@
       :pagosEfectivo="pagosEfectivo"
       :casoEspecial="casoEspecial"
       :cliente="currentCliente"
+      :statsCliente="statsCliente"
     />
 
     <DetallePedidoComisiones
@@ -88,7 +89,7 @@
       <div class="flex flex-row justify-center">
         <p>
           <span class="resalta">Total de Pedidos:</span>
-          {{ cantidadPedidos }}
+          {{ cantidadServicios }}
         </p>
       </div>
 
@@ -274,10 +275,23 @@ export default {
       cantidadPedidos: 0,
       pageSize: 200,
       es: es,
+      statsCliente: {},
     };
   },
   mounted() {
     this.retrieveClientesConPedidos();
+  },
+  computed: {
+    cantidadServicios() {
+      let total = this.pedidosCliente.reduce((acc, pedido) => {
+        if (pedido.status.id !== 6) {
+          return +pedido.viajes + acc;
+        }
+        return acc;
+      }, 0);
+
+      return total;
+    },
   },
   methods: {
     getRequestParams(desde, hasta, id, page, pageSize) {
@@ -347,15 +361,26 @@ export default {
       }
     },
 
+    async obtenerStatsCliente(id) {
+      try {
+        this.statsCliente = await ClienteService.getStatsCliente(id);
+      } catch (error) {
+        console.error(
+          `Error al traer los stats del clientes: ${error.message}`
+        );
+      }
+    },
+
     handlePageChange(value) {
       this.page = value;
       this.retrievePedidos();
     },
 
-    setActiveCliente(cliente, index) {
+    async setActiveCliente(cliente, index) {
       this.currentCliente = cliente;
       this.currentIndex = index;
-      this.retrievePedidosClientes();
+      await this.retrievePedidosClientes();
+      await this.obtenerStatsCliente(index);
     },
 
     refreshList() {
