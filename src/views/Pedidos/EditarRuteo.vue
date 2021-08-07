@@ -1475,9 +1475,6 @@ export default {
         this.pedido.fecha = new Date(
           new Date(this.pedido.fecha).getTime() + 1000 * 60 * 60 * 5
         );
-
-        console.log(this.pedido);
-        console.log(response.data.pedidosRuta);
       } catch (error) {
         console.error(`Error al obtener un Ruteo por Id. ${error.message}`);
       }

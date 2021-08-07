@@ -102,7 +102,7 @@ class ClienteService {
           pago: clienteEditado.pago,
           comprobante: clienteEditado.comprobante,
           rol: clienteEditado.rol,
-          tipoEnvio: clienteEditado.tipoDeEnvio.tipo,
+          tipoEnvio: clienteEditado.tipoEnvio,
         },
         { headers: authHeader() }
       );

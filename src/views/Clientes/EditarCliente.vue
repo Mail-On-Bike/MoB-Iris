@@ -296,12 +296,8 @@ export default {
       "tiposDeEnvio",
     ]),
   },
-  async mounted() {
-    try {
-      this.getCliente(this.$route.params.id);
-    } catch (error) {
-      console.error(error);
-    }
+  mounted() {
+    this.getCliente(this.$route.params.id);
   },
   methods: {
     ...mapActions("clientes", ["getClientes"]),
