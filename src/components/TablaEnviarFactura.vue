@@ -121,7 +121,7 @@
         {{ detalle.tramite }}
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
-        {{ detalle.otroDatoConsignado }}
+        {{ detalle.otroDatoRemitente }}
       </td>
     </tr>
 
