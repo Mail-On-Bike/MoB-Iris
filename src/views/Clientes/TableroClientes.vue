@@ -36,6 +36,17 @@
           >Crear nuevo cliente</span
         >
       </router-link>
+
+      <router-link
+        to="/destinos/tablero-destinos"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Destinos Recurrentes</span
+        >
+      </router-link>
     </div>
 
     <div class="grid grid-cols-2 gap-x-2">

@@ -102,7 +102,7 @@ class ClienteService {
           pago: clienteEditado.pago,
           comprobante: clienteEditado.comprobante,
           rol: clienteEditado.rol,
-          tipoEnvio: clienteEditado.tipoDeEnvio.tipo,
+          tipoEnvio: clienteEditado.tipoEnvio,
         },
         { headers: authHeader() }
       );
@@ -133,6 +133,21 @@ class ClienteService {
       });
 
       return clientes;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
+
+  async getStatsCliente(id) {
+    try {
+      let clientes = await axios.get(
+        `${API_URL}/stats-actuales-cliente/${id}`,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      return clientes.data;
     } catch (error) {
       console.error("Mensaje de error: ", error.message);
     }

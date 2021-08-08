@@ -127,12 +127,9 @@
             custom
             v-slot="{ navigate }"
           >
-            <span
-              @click="navigate"
-              role="link"
-              class="font-bold text-center cursor-pointer text-primary"
-              >{{ ruta.contactoConsignado }}</span
-            >
+            <span @click="navigate" role="link" class="cursor-pointer">{{
+              ruta.contactoConsignado
+            }}</span>
           </router-link>
         </div>
 
@@ -142,12 +139,9 @@
             custom
             v-slot="{ navigate }"
           >
-            <span
-              @click="navigate"
-              role="link"
-              class="font-bold cursor-pointer text-primary"
-              >{{ ruta.direccionConsignado }}</span
-            >
+            <span @click="navigate" role="link" class="cursor-pointer">{{
+              ruta.direccionConsignado
+            }}</span>
           </router-link>
         </div>
 
@@ -157,12 +151,9 @@
             custom
             v-slot="{ navigate }"
           >
-            <span
-              @click="navigate"
-              role="link"
-              class="font-bold text-center cursor-pointer text-primary"
-              >{{ ruta.distrito.distrito }}</span
-            >
+            <span @click="navigate" role="link" class="cursor-pointer">{{
+              ruta.distrito.distrito
+            }}</span>
           </router-link>
         </div>
 

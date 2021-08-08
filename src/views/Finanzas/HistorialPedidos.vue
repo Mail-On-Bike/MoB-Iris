@@ -182,7 +182,14 @@
             <p v-else>{{ pedido.distrito.distrito }}</p>
           </div>
           <div>
-            <p>{{ pedido.contactoConsignado }}</p>
+            <p
+              v-if="
+                pedido.contactoConsignado.toLowerCase() === 'mesa de partes'
+              "
+            >
+              {{ pedido.empresaConsignado }}
+            </p>
+            <p v-else>{{ pedido.contactoConsignado }}</p>
           </div>
           <div>
             <p v-if="pedido.rolCliente === 'Remitente'">

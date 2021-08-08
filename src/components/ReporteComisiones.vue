@@ -28,7 +28,12 @@
         <span>
           {{ $date(detalle.fecha).format("DD/MM") }}: {{ detalle.id }} - [{{
             detalle.empresaRemitente.toUpperCase()
-          }}] = {{ detalle.tarifa }} {{ detalle.formaPago.split(" ")[0] }}
+          }}] = {{ detalle.tarifa }}
+          {{
+            detalle.status.id === 5
+              ? detalle.status.tag
+              : detalle.formaPago.split(" ")[0]
+          }}
         </span>
       </div>
       <br />

@@ -263,7 +263,7 @@
         <Loading v-if="loading" />
         <div
           v-else
-          class="grid items-center grid-cols-10 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center h-auto grid-cols-10 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': pedido.id == currentIndex,
           }"
@@ -287,7 +287,14 @@
           </div>
 
           <div @click="setActivePedido(pedido, pedido.id)">
-            <p>{{ pedido.contactoConsignado }}</p>
+            <p
+              v-if="
+                pedido.contactoConsignado.toLowerCase() === 'mesa de partes'
+              "
+            >
+              {{ pedido.empresaConsignado }}
+            </p>
+            <p v-else>{{ pedido.contactoConsignado }}</p>
           </div>
 
           <div @click="setActivePedido(pedido, pedido.id)">
@@ -367,7 +374,7 @@ import Pagination from "@/components/Pagination.vue";
 import Loading from "@/components/Loading";
 import { es } from "vuejs-datepicker/dist/locale";
 
-const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
+// const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
 const manana = new Date().getTime() + 1000 * 60 * 60 * 24;
 
 export default {
@@ -396,7 +403,7 @@ export default {
       currentIndex: -1,
       currentRuta: null,
       currentRutaIndex: -1,
-      fechaInicio: new Date(seisDiasAtras),
+      fechaInicio: new Date(),
       fechaFin: new Date(manana),
       pedidosPorAsignar: 0,
       pedidosArray: [],

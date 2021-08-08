@@ -58,13 +58,13 @@
 
     <div class="flex justify-around w-1/2 px-2 my-2 ml-4">
       <button @click="filtrarMobiker('Activo')" class="mob-activo">
-        Activos ({{ contarMoBikersActivos }})
+        Activos ({{ contadorMobikers.activos }})
       </button>
       <button @click="filtrarMobiker('Inactivo')" class="mob-inactivo">
-        Inactivos ({{ contarMoBikersInactivos }})
+        Inactivos ({{ contadorMobikers.inactivos }})
       </button>
       <button @click="filtrarMobiker('Retirado')" class="mob-retirado">
-        Retirados ({{ contarMoBikersRetirados }})
+        Retirados ({{ contadorMobikers.retirados }})
       </button>
     </div>
 
@@ -239,6 +239,8 @@ export default {
       activeTabName: null,
       loading: false,
 
+      contadorMobikers: {},
+
       statsCopiadas: false,
     };
   },
@@ -251,28 +253,9 @@ export default {
   },
   async mounted() {
     this.mobikersFiltrados = await MobikerService.filterMobikers("Activo");
-    await this.getAllMobikers();
+    this.contadorMobikers = await MobikerService.getContadorMobikers();
 
     this.currentTab = this.tabs[tabNames.detalles];
-  },
-  computed: {
-    contarMoBikersActivos() {
-      return this.mobikers.filter((mob) => {
-        return mob.status === "Activo";
-      }).length;
-    },
-
-    contarMoBikersInactivos() {
-      return this.mobikers.filter((mob) => {
-        return mob.status === "Inactivo";
-      }).length;
-    },
-
-    contarMoBikersRetirados() {
-      return this.mobikers.filter((mob) => {
-        return mob.status === "Retirado";
-      }).length;
-    },
   },
   methods: {
     async retrievePedidosMobikers(id) {

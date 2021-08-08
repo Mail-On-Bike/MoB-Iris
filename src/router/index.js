@@ -51,6 +51,15 @@ const routes = [
     },
   },
   {
+    path: "/nuevo-usuario-cliente",
+    name: "NuevoUsuarioCliente",
+    component: () => import("@/views/UsuariosClientes/NuevoUsuarioCliente.vue"),
+    meta: {
+      requiresAuth: true,
+      isAdmin: true,
+    },
+  },
+  {
     path: "/pedidos/tablero-pedidos",
     name: "TableroPedidos",
     component: () => import("@/views/Pedidos/TableroPedidos.vue"),
@@ -151,6 +160,30 @@ const routes = [
     path: "/clientes/tablero-clientes/:id",
     name: "EditarCliente",
     component: () => import("@/views/Clientes/EditarCliente.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/destinos/tablero-destinos",
+    name: "TableroDestinos",
+    component: () => import("@/views/Destinos/TableroDestinos.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/destinos/crear-destino",
+    name: "NuevoDestino",
+    component: () => import("@/views/Destinos/NuevoDestino.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/destinos/tablero-destinos/:id",
+    name: "EditarDestino",
+    component: () => import("@/views/Destinos/EditarDestino.vue"),
     meta: {
       requiresAuth: true,
     },

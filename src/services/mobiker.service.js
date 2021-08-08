@@ -186,6 +186,18 @@ class MobikerService {
       console.error("Mensaje de error: ", error.message);
     }
   }
+
+  async getContadorMobikers() {
+    try {
+      let mobikers = await axios.get(`${API_URL}/contar-mobikers`, {
+        headers: authHeader(),
+      });
+
+      return mobikers.data;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
 }
 
 export default new MobikerService();

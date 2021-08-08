@@ -302,7 +302,11 @@
             <p v-else>{{ pedido.distrito.distrito }}</p>
           </div>
           <div>
-            <p v-if="pedido.contactoConsignado == 'Mesa de Partes'">
+            <p
+              v-if="
+                pedido.contactoConsignado.toLowerCase() === 'mesa de partes'
+              "
+            >
               {{ pedido.empresaConsignado }}
             </p>
             <p v-else>{{ pedido.contactoConsignado }}</p>

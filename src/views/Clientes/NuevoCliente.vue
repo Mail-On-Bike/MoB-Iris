@@ -143,7 +143,7 @@
             v-if="errors.has('direccion')"
             class="p-2 text-sm text-white bg-red-500 rounded"
           >
-            <p>La direccion es requerida</p>
+            <p>La dirección es requerida</p>
           </div>
         </div>
 

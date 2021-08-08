@@ -9,6 +9,7 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
+      <th class="table-cell">Recaudo</th>
       <th class="table-cell">Trámite</th>
       <th class="table-cell">Observaciones</th>
     </tr>
@@ -27,18 +28,24 @@
       <td class="table-cell px-2 border-2 border-secondary">
         {{
           detalle.contactoConsignado.toLowerCase() === "mesa de partes"
-            ? capitalizar(detalle.empresaoConsignado)
-            : capitalizar(detalle.contactoConsignado)
+            ? detalle.empresaConsignado
+            : detalle.contactoConsignado
         }}
       </td>
       <td class="table-cell px-2 border-2 border-secondary">
         {{ capitalizar(detalle.direccionConsignado) }}
       </td>
-      <td class="table-cell px-2 border-2 border-secondary">
+      <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.distrito.distrito }}
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.tarifa }}
+      </td>
+      <td class="table-cell px-2 text-center border-2 border-secondary">
+        {{ detalle.recaudo }}
+      </td>
+      <td class="table-cell px-2 text-center border-2 border-secondary">
+        {{ detalle.tramite }}
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.otroDatoConsignado }}
@@ -55,6 +62,11 @@
         class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
       >
         {{ totalTarifa }}
+      </td>
+      <td
+        class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
+      >
+        {{ totalRecaudo }}
       </td>
       <td
         class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
@@ -73,6 +85,7 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
+      <th class="table-cell">Recaudo</th>
       <th class="table-cell">Trámite</th>
       <th class="table-cell">Observaciones</th>
     </tr>
@@ -88,24 +101,27 @@
       <td class="table-cell px-2 border-2 border-secondary">
         {{
           detalle.contactoConsignado.toLowerCase() === "mesa de partes"
-            ? capitalizar(detalle.empresaConsignado)
-            : capitalizar(detalle.contactoConsignado)
+            ? detalle.empresaConsignado
+            : detalle.contactoConsignado
         }}
       </td>
       <td class="table-cell px-2 border-2 border-secondary">
         {{ capitalizar(detalle.direccionConsignado) }}
       </td>
-      <td class="table-cell px-2 border-2 border-secondary">
+      <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.distrito.distrito }}
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.tarifa }}
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
+        {{ detalle.recaudo }}
+      </td>
+      <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.tramite }}
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
-        {{ detalle.otroDatoConsignado }}
+        {{ detalle.otroDatoRemitente }}
       </td>
     </tr>
 
@@ -118,6 +134,11 @@
         class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
       >
         {{ totalTarifa }}
+      </td>
+      <td
+        class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
+      >
+        {{ totalRecaudo }}
       </td>
       <td
         class="table-cell px-2 font-bold text-center border-2 border-secondary text-primary"
@@ -145,6 +166,13 @@ export default {
     totalTarifa() {
       let total = this.info.reduce((acc, detalle) => {
         return +detalle.tarifa + acc;
+      }, 0);
+      return +total.toFixed(2);
+    },
+
+    totalRecaudo() {
+      let total = this.info.reduce((acc, detalle) => {
+        return +detalle.recaudo + acc;
       }, 0);
       return +total.toFixed(2);
     },
