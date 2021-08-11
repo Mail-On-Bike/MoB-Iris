@@ -484,8 +484,8 @@
               v-model.number="nuevoPedido.recaudo"
               type="number"
               class="input"
-              @input="changeRecaudo"
-              @change="changeRecaudo"
+              @input="watchRecaudo"
+              @change="watchRecaudo"
               min="0"
             />
           </div>
@@ -661,8 +661,8 @@ export default {
   methods: {
     ...mapActions("mobikers", ["obtenerComision"]),
 
-    changeRecaudo() {
-      if (this.nuevoPedido.recaudo !== 0) {
+    watchRecaudo() {
+      if (this.nuevoPedido.recaudo > 0) {
         this.nuevoPedido.tarifa = +(this.tarifaMemoria + 2);
       }
       if (this.nuevoPedido.recaudo === 0) {

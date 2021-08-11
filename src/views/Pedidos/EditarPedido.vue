@@ -315,6 +315,7 @@
               :list="modalidades"
               option-text="tipo"
               option-value="tipo"
+              @input="watchModalidad"
             />
             <div
               v-if="errors.has('modalidad')"
@@ -490,6 +491,8 @@
               type="number"
               min="0"
               class="input"
+              @input="watchRecaudo"
+              @change="watchRecaudo"
             />
           </div>
 
@@ -565,9 +568,14 @@ export default {
       },
       errorCalcularDistancia: false,
       es: es,
-      tarifaMemoria: 0,
-      tarifaSugeridaMemoria: 0,
-      distanciaMemoria: 0,
+      memoria: {
+        tarifa: 0,
+        tarifaSugerida: 0,
+        recaudo: 0,
+        distancia: 0,
+        modalidad: "",
+        tipoEnvio: "",
+      },
     };
   },
   async mounted() {
@@ -628,35 +636,84 @@ export default {
             : 0;
       }
     },
-
-    // "editarPedido.recaudo": function() {
-    //   if (this.editarPedido.recaudo > 0) {
-    //     this.editarPedido.tarifa = +(this.tarifaMemoria + 2);
-    //   }
-    //   if (this.editarPedido.recaudo === 0) {
-    //     this.editarPedido.tarifa = this.tarifaMemoria;
-    //   }
-    // },
-
-    // "editarPedido.modalidad": function() {
-    //   if (this.editarPedido.modalidad.tipo === "Con Retorno") {
-    //     this.editarPedido.viajes = 2;
-    //     this.editarPedido.distancia *= 2;
-    //     if (this.editarPedido.tipoEnvio === "E-Commerce") {
-    //       this.editarPedido.tarifa = +Math.ceil(this.tarifaMemoria / 2) * 2;
-    //     } else {
-    //       this.editarPedido.tarifa = +Math.ceil(this.tarifaMemoria / 2);
-    //     }
-    //   }
-    //   if (this.editarPedido.modalidad.tipo === "Una vía") {
-    //     this.editarPedido.viajes = 1;
-    //     this.editarPedido.tarifa = this.tarifaMemoria;
-    //     this.editarPedido.distancia = this.distanciaMemoria;
-    //   }
-    // },
   },
   methods: {
     ...mapActions("mobikers", ["obtenerComision"]),
+
+    watchRecaudo() {
+      if (this.memoria.recaudo === 0) {
+        if (this.editarPedido.recaudo > 0) {
+          this.editarPedido.tarifa = +(this.memoria.tarifa + 2);
+        }
+        if (this.editarPedido.recaudo === 0) {
+          this.editarPedido.tarifa = this.memoria.tarifa;
+        }
+      }
+
+      if (this.memoria.recaudo > 0) {
+        if (this.editarPedido.recaudo > 0) {
+          this.editarPedido.tarifa = +this.memoria.tarifa;
+        }
+        if (this.editarPedido.recaudo === 0) {
+          this.editarPedido.tarifa = this.memoria.tarifa - 2;
+        }
+      }
+    },
+
+    watchModalidad() {
+      if (this.memoria.modalidad === "Una vía") {
+        if (this.editarPedido.modalidad.tipo === "Con Retorno") {
+          this.editarPedido.viajes = 2;
+          this.editarPedido.distancia *= 2;
+
+          if (this.editarPedido.tipoEnvio === "E-Commerce") {
+            this.editarPedido.tarifa = +Math.ceil(this.memoria.tarifa) * 2;
+            this.editarPedido.tarifaSugerida =
+              +Math.ceil(this.memoria.tarifaSugerida) * 2;
+          } else {
+            this.editarPedido.tarifa += +Math.ceil(this.memoria.tarifa / 2);
+            this.editarPedido.tarifaSugerida += +Math.ceil(
+              this.memoria.tarifaSugerida / 2
+            );
+          }
+        }
+
+        if (this.editarPedido.modalidad.tipo === "Una vía") {
+          this.editarPedido.viajes = 1;
+          this.editarPedido.tarifa = this.memoria.tarifa;
+          this.editarPedido.tarifaSugerida = this.memoria.tarifaSugerida;
+          this.editarPedido.distancia = this.memoria.distancia;
+        }
+      }
+
+      if (this.memoria.modalidad === "Con Retorno") {
+        if (this.editarPedido.modalidad.tipo === "Una vía") {
+          this.editarPedido.viajes = 1;
+          this.editarPedido.distancia = +(this.memoria.distancia / 2).toFixed(
+            1
+          );
+
+          if (this.editarPedido.tipoEnvio === "E-Commerce") {
+            this.editarPedido.tarifa = +(this.memoria.tarifa / 2).toFixed(2);
+            this.editarPedido.tarifaSugerida = +(
+              this.memoria.tarifaSugerida / 2
+            ).toFixed(2);
+          } else {
+            this.editarPedido.tarifa -= +Math.ceil(this.memoria.tarifa / 2);
+            this.editarPedido.tarifaSugerida -= +Math.ceil(
+              this.memoria.tarifaSugerida / 2
+            );
+          }
+        }
+
+        if (this.editarPedido.modalidad.tipo === "Con Retorno") {
+          this.editarPedido.viajes = 2;
+          this.editarPedido.tarifa = this.memoria.tarifa;
+          this.editarPedido.tarifaSugerida = this.memoria.tarifaSugerida;
+          this.editarPedido.distancia = this.memoria.distancia;
+        }
+      }
+    },
 
     async getPedido(id) {
       try {
@@ -665,9 +722,16 @@ export default {
         this.editarPedido = response.data;
         this.editarPedido.distritoConsignado = response.data.distrito.distrito;
         this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
-        this.tarifaMemoria = response.data.tarifa;
-        this.tarifaSugeridaMemoria = this.editarPedido.tarifaSugerida;
-        this.distanciaMemoria = this.editarPedido.distancia;
+
+        // Memoria del Pedido
+        this.memoria.tarifa = response.data.tarifa;
+        this.memoria.tarifaSugerida = this.editarPedido.tarifaSugerida;
+        this.memoria.tipoEnvio = response.data.tipoDeEnvio.tipo;
+        this.memoria.modalidad = response.data.modalidad.tipo;
+        this.memoria.distancia = this.editarPedido.distancia;
+        this.memoria.recaudo = this.editarPedido.recaudo;
+
+        console.log(this.memoria);
 
         // Acomodando Fechas
         this.editarPedido.fecha = new Date(
@@ -752,17 +816,17 @@ export default {
           this.editarPedido.distritoConsignado
         );
 
-        this.distanciaMemoria = this.editarPedido.distancia;
+        this.memoria.distancia = this.editarPedido.distancia;
         if (this.editarPedido.modalidad === "Con Retorno") {
-          this.editarPedido.distancia = this.distanciaMemoria * 2;
+          this.editarPedido.distancia = this.memoria.distancia * 2;
         } else {
-          this.editarPedido.distancia = this.distanciaMemoria;
+          this.editarPedido.distancia = this.memoria.distancia;
         }
 
         this.editarPedido.tarifa = response.tarifa;
-        this.tarifaMemoria = response.tarifa;
+        this.memoria.tarifa = response.tarifa;
         this.editarPedido.tarifaSugerida = response.tarifaSugerida;
-        this.tarifaSugeridaMemoria = response.tarifaSugerida;
+        this.memoria.tarifaSugerida = response.tarifaSugerida;
 
         // Calcular las estadísticas Ecoamigables
         const stats = calcularEstadisticas(this.editarPedido.distancia);
