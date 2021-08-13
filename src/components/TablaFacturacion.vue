@@ -165,7 +165,7 @@
     <tr class="table-row">
       <td
         class="table-cell px-2 text-center border-2 resalta border-secondary"
-        colspan="4"
+        colspan="5"
       >
         Total:
       </td>

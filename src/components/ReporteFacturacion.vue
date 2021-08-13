@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showDetalle"
-    class="absolute z-40 w-11/12 p-4 mx-auto transform -translate-x-1/2 shadow-xl modal bg-primary rounded-xl top-12 left-1/2"
+    class="absolute z-40 w-11/12 h-auto p-4 mx-auto transform -translate-x-1/2 shadow-xl modal bg-primary rounded-xl top-12 left-1/2"
   >
     <div class="absolute -top-4 -right-2">
       <button
@@ -172,7 +172,7 @@ export default {
 
   .inner-modal {
     // height: 600px;
-    max-height: 700px;
+    max-height: 80vh;
   }
 }
 </style>
