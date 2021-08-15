@@ -105,7 +105,7 @@
             <input
               v-model="nuevoPedido.contactoRemitente"
               type="text"
-              v-validate="'required'"
+              v-validate="'required|max:100'"
               name="contactoRemitente"
               class="input"
             />
@@ -113,7 +113,9 @@
               v-if="errors.has('contactoRemitente')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>El contacto del cliente es requerido</p>
+              <p>
+                El contacto del cliente es requerido y máximo 100 caracteres
+              </p>
             </div>
           </div>
 
@@ -122,7 +124,7 @@
             <input
               v-model="nuevoPedido.empresaRemitente"
               type="text"
-              v-validate="'required'"
+              v-validate="'required|max:75'"
               name="empresaRemitente"
               class="input"
               :disabled="true"
@@ -131,7 +133,7 @@
               v-if="errors.has('empresaRemitente')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>La empresa del cliente es requerida</p>
+              <p>La empresa del cliente es requerida y máximo 75 caracteres</p>
             </div>
           </div>
 
@@ -144,7 +146,7 @@
             <input
               v-model="nuevoPedido.telefonoRemitente"
               type="string"
-              v-validate="'required|min:6|max:12'"
+              v-validate="'required|min:6|max:15'"
               name="telefonoRemitente"
               class="input"
             />
@@ -163,7 +165,7 @@
             <input
               v-model="nuevoPedido.direccionRemitente"
               type="text"
-              v-validate="'required'"
+              v-validate="'required|max:150'"
               name="direccionRemitente"
               class="input"
             />
@@ -171,7 +173,7 @@
               v-if="errors.has('direccionRemitente') || errorCalcularDistancia"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>La dirección es requerida</p>
+              <p>La dirección es requerida y máximo 150 caracteres</p>
             </div>
           </div>
 
@@ -199,9 +201,16 @@
             <label for="otroDatoRemitente" class="label-input">Otro Dato</label>
             <input
               v-model="nuevoPedido.otroDatoRemitente"
+              v-validate="'max:250'"
               type="text"
               class="input"
             />
+            <div
+              v-if="errors.has('otroDatoRemitente')"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>Máximo 250 caracteres</p>
+            </div>
           </div>
 
           <div>
@@ -342,7 +351,7 @@
             <input
               v-model="nuevoPedido.contactoConsignado"
               type="text"
-              v-validate="'required'"
+              v-validate="'required|max:100'"
               name="contactoConsignado"
               class="input"
             />
@@ -350,7 +359,7 @@
               v-if="errors.has('contactoConsignado')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>El contacto es requerido</p>
+              <p>El contacto es requerido y máximo 100 caracteres</p>
             </div>
           </div>
 
@@ -369,7 +378,7 @@
             <input
               v-model="nuevoPedido.telefonoConsignado"
               type="string"
-              v-validate="'required|min:6|max:12'"
+              v-validate="'required|min:6|max:15'"
               name="telefonoConsignado"
               class="input"
             />
@@ -388,7 +397,7 @@
             <input
               v-model="nuevoPedido.direccionConsignado"
               type="text"
-              v-validate="'required'"
+              v-validate="'required|max:150'"
               name="direccionConsignado"
               class="input"
             />
@@ -426,8 +435,15 @@
             <input
               v-model="nuevoPedido.otroDatoConsignado"
               type="text"
+              v-validate="'max:250'"
               class="input"
             />
+            <div
+              v-if="errors.has('otroDatoConsignado')"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>Máximo 250 caracteres</p>
+            </div>
           </div>
 
           <div>
