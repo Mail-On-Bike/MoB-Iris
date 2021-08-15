@@ -7,6 +7,13 @@
         Nuevo Cliente
       </h1>
     </div>
+    <div class="overlay" v-if="showBuscador"></div>
+
+    <BuscadorEmpresa
+      :showBuscador="showBuscador"
+      @cerrarBuscador="showBuscador = false"
+      @activarEmpresa="activarEmpresa"
+    />
 
     <form
       class="-mt-10"
@@ -261,6 +268,14 @@
         </button>
 
         <button
+          type="button"
+          class="relative px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
+          @click="showBuscador = true"
+        >
+          Buscar Empresa
+        </button>
+
+        <button
           type="submit"
           class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
         >
@@ -275,6 +290,7 @@
 
 <script>
 import BaseAlerta from "@/components/BaseAlerta.vue";
+import BuscadorEmpresa from "@/components/BuscadorEmpresa";
 import Cliente from "@/models/cliente";
 import { ModelListSelect } from "vue-search-select";
 import ClienteService from "@/services/cliente.service";
@@ -285,6 +301,7 @@ export default {
   data() {
     return {
       nuevoCliente: new Cliente(),
+      showBuscador: false,
       alert: {
         message: "",
         success: false,
@@ -342,6 +359,10 @@ export default {
       }
     },
 
+    activarEmpresa(empresa) {
+      this.nuevoCliente.razonComercial = empresa.empresa;
+    },
+
     cancelar() {
       history.go(-1);
     },
@@ -349,6 +370,7 @@ export default {
   components: {
     ModelListSelect,
     BaseAlerta,
+    BuscadorEmpresa,
   },
 };
 </script>

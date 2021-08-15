@@ -56,6 +56,10 @@
       <span class="resalta">Rol: </span>
       {{ estadisticas.rolCliente.rol }}
     </p>
+    <p class="mb-2" v-if="estadisticas.empresa">
+      <span class="resalta">Empresa Asociada: </span>
+      {{ estadisticas.empresa.empresa }}
+    </p>
   </div>
 </template>
 

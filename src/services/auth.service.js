@@ -26,6 +26,7 @@ class AuthService {
     localStorage.removeItem("clientes");
     localStorage.removeItem("mobikers");
     localStorage.removeItem("destinos");
+    localStorage.removeItem("empresas");
 
     // Eliminar Tablas Auxiliares
     localStorage.removeItem("rolesUsuarios");
