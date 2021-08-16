@@ -94,6 +94,10 @@ export default {
           link: "/finanzas/historial-pedidos",
         },
         {
+          title: "Empresas",
+          link: "/empresas/tablero-empresas",
+        },
+        {
           title: "Clientes",
           link: "/clientes/tablero-clientes",
         },

@@ -228,6 +228,14 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/empresas/tablero-empresas",
+    name: "TableroEmpresas",
+    component: () => import("@/views/Empresas/TableroEmpresas.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = new VueRouter({
