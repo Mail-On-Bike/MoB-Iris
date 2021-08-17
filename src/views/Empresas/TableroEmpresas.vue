@@ -58,7 +58,7 @@
 
           <div>
             <router-link
-              :to="`/clientes/tablero-clientes/${empresa.id}`"
+              :to="`/empresas/tablero-empresas/${empresa.id}`"
               custom
               v-slot="{ navigate }"
               class="cursor-pointer"
@@ -74,9 +74,7 @@
         </div>
       </div>
 
-      <div
-        class="h-full overflow-y-auto bg-white border border-primary h-96 max-h-96"
-      >
+      <div class="overflow-y-auto bg-white border border-primary h-96 max-h-96">
         <h3
           v-if="!currentEmpresa"
           class="mt-40 text-2xl font-bold text-center text-primary"

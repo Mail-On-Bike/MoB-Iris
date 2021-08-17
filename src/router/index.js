@@ -237,6 +237,14 @@ const routes = [
     },
   },
   {
+    path: "/empresas/tablero-empresas/:id",
+    name: "EditarEmpresa",
+    component: () => import("@/views/Empresas/EditarEmpresa.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/empresas/nueva-empresa",
     name: "NuevaEmpresa",
     component: () => import("@/views/Empresas/NuevaEmpresa.vue"),

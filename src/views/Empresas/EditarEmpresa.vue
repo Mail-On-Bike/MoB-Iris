@@ -103,10 +103,10 @@
 
       <button
         type="submit"
-        @click.prevent="handleNuevaEmpresa"
+        @click.prevent="handleEditarEmpresa"
         class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
       >
-        Crear Nueva Empresa
+        Actualizar Empresa
       </button>
     </div>
 
@@ -119,14 +119,15 @@ import BaseAlerta from "@/components/BaseAlerta.vue";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Empresa from "@/models/empresa";
 import EmpresaService from "@/services/empresa.service";
+import { mapActions } from "vuex";
 
 export default {
-  name: "NuevaEmpresa",
+  name: "EditarEmpresa",
   components: { BaseAlerta, BuscadorCliente },
   data() {
     return {
       nombreEmpresa: "",
-      nuevaEmpresa: new Empresa("", []),
+      editarEmpresa: new Empresa("", []),
       showBuscador: false,
       alert: {
         message: "",
@@ -136,30 +137,50 @@ export default {
       clientesAsociados: [],
     };
   },
+  mounted() {
+    this.retrieveEmpresa(this.$route.params.id);
+  },
   methods: {
-    async handleNuevaEmpresa() {
+    ...mapActions("empresas", ["getEmpresas"]),
+
+    async retrieveEmpresa(id) {
+      try {
+        const { empresa, clientes } = await EmpresaService.getEmpresa(id);
+        console.log(clientes);
+        this.nombreEmpresa = empresa;
+        this.clientesAsociados = clientes;
+      } catch (error) {
+        console.error(`Error a obtener la Empresa: ${error.message}`);
+      }
+    },
+
+    async handleEditarEmpresa() {
       try {
         const isValid = await this.$validator.validateAll();
         if (!isValid) {
           return;
         }
 
-        const nuevaEmpresa = {
+        const editarEmpresa = {
           empresa: this.nombreEmpresa,
           clientes: this.clientesAsociados,
         };
 
-        const response = await EmpresaService.storageEmpresa(nuevaEmpresa);
+        const response = await EmpresaService.updateEmpresa(
+          this.$route.params.id,
+          editarEmpresa
+        );
         this.alert.message = response.data.message;
         this.alert.show = true;
         this.alert.success = true;
+        await this.getEmpresas();
 
         setTimeout(() => {
           history.go(-1);
         }, 1500);
       } catch (error) {
         console.log(
-          `Error al crear Nuevo Pedido: ${error.response.data.message}`
+          `Error al Editar la Empresa: ${error.response.data.message}`
         );
         this.alert.message = error.response.data.message;
         this.alert.show = true;
