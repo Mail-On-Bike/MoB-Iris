@@ -7,6 +7,7 @@
         Nuevo Cliente
       </h1>
     </div>
+
     <div class="overlay" v-if="showBuscador"></div>
 
     <BuscadorEmpresa
