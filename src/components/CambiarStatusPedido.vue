@@ -16,7 +16,8 @@
       <h1
         class="inline-block px-6 pt-1 text-2xl font-bold bg-white text-primary rounded-t-xl"
       >
-        Pedido #<span class="text-red-500">{{ currentPedido.id }}</span>
+        <!-- Pedido #<span class="text-red-500">{{ currentPedido.id }}</span> -->
+        Cambiar el estado de {{ arrayPedidos.length }}
       </h1>
     </div>
 
@@ -30,7 +31,7 @@
         <model-list-select
           name="status"
           id="status"
-          v-model="currentPedido.statusId"
+          v-model="newStatus"
           :list="statusDelPedido"
           option-text="tag"
           option-value="id"
@@ -38,11 +39,7 @@
       </div>
 
       <div
-        v-if="
-          currentPedido.statusId === 4 ||
-            currentPedido.statusId === 5 ||
-            currentPedido.statusId === 6
-        "
+        v-if="newStatus === 4 || newStatus === 5 || newStatus === 6"
         class="mt-6"
       >
         <label
@@ -56,7 +53,7 @@
           id="comentario"
           cols="26"
           rows="3"
-          v-model="currentPedido.comentario"
+          v-model="newComentario"
         ></textarea>
       </div>
     </form>
@@ -92,13 +89,15 @@ export default {
       type: Boolean,
       required: true,
     },
-    currentPedido: {
-      type: Object,
+    arrayPedidos: {
+      type: Array,
     },
   },
   data() {
     return {
       statusCambiado: false,
+      newStatus: 4,
+      newComentario: "",
     };
   },
   computed: {
@@ -107,23 +106,16 @@ export default {
   methods: {
     async handleCambiarStatusPedido() {
       try {
-        const pedidoCambiado = {
-          status: this.currentPedido.statusId,
-          mobiker: this.currentPedido.mobiker.fullName,
-          comentario: this.currentPedido.comentario,
-          isRuteo: this.currentPedido.isRuteo,
-          ruteoId: this.currentPedido.ruteoId,
-        };
+        for (let pedido of this.arrayPedidos) {
+          const pedidoCambiado = {
+            status: this.newStatus,
+            mobiker: pedido.mobiker.fullName,
+            comentario: this.newComentario,
+            isRuteo: pedido.isRuteo,
+            ruteoId: pedido.ruteoId,
+          };
 
-        await PedidoService.cambiarEstadoPedido(
-          this.currentPedido.id,
-          pedidoCambiado
-        );
-
-        if (this.currentPedido.statusId !== 1) {
-          this.statusAsignado = true;
-        } else {
-          this.statusAsignado = false;
+          await PedidoService.cambiarEstadoPedido(pedido.id, pedidoCambiado);
         }
 
         this.cerrarModal();

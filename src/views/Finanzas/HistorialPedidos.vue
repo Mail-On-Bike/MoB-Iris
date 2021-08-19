@@ -18,11 +18,8 @@
 
     <CambiarStatusPedido
       :showCambiarStatus="showCambiarStatus"
-      @cerrarModal="
-        showCambiarStatus = false;
-        refreshList();
-      "
-      :currentPedido="currentPedido"
+      @cerrarModal="cerrarModalStatus"
+      :arrayPedidos="pedidosArray"
     />
 
     <div class="flex flex-row mb-4 -mt-10 justify-evenly">
@@ -107,6 +104,15 @@
           >Recaudos</span
         >
       </router-link>
+
+      <button
+        @click="showCambiarStatus = true"
+        class="flex items-center justify-center w-10 h-10 rounded-full focus:outline-none bg-primary disabled:bg-gray-400 disabled:opacity-90"
+        title="Estado del Pedido"
+        :disabled="emptyArray"
+      >
+        <font-awesome-icon class="text-lg text-white" icon="bicycle" />
+      </button>
     </div>
 
     <div class="grid grid-cols-10 gap-2">
@@ -225,20 +231,23 @@
           </div>
 
           <div class="flex justify-evenly">
-            <button
-              v-if="pedido.status.id !== 1"
-              @click="showCambiarStatus = true"
-              class="focus:outline-none"
-              title="Estado del Pedido"
-            >
-              <font-awesome-icon class="text-2xl text-primary" icon="bicycle" />
-            </button>
-
             <button class="focus:outline-none" @click="showDetalle = true">
               <font-awesome-icon
                 class="text-2xl text-primary"
                 icon="window-maximize"
               />
+            </button>
+
+            <button
+              @click="cambiarEstadoPedido(pedido)"
+              class="focus:outline-none text-primary"
+            >
+              <font-awesome-icon
+                v-if="!pedidosArray.includes(pedido)"
+                class="text-2xl text-gray-400"
+                icon="check-circle"
+              />
+              <font-awesome-icon v-else class="text-2xl" icon="check-circle" />
             </button>
           </div>
         </div>
@@ -288,6 +297,7 @@ export default {
     return {
       pedidos: [],
       pedidosFiltrados: [],
+      pedidosArray: [],
       showDetalle: false,
       showCambiarStatus: false,
       currentPedido: null,
@@ -306,6 +316,15 @@ export default {
   },
   mounted() {
     this.retrievePedidos();
+  },
+  computed: {
+    emptyArray() {
+      if (this.pedidosArray.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   methods: {
     getRequestParams(desde, hasta, page, pageSize) {
@@ -379,11 +398,25 @@ export default {
       this.currentIndex = index;
     },
 
+    cambiarEstadoPedido(pedido) {
+      if (this.pedidosArray.includes(pedido)) {
+        this.pedidosArray = this.pedidosArray.filter((pe) => pe !== pedido);
+      } else {
+        this.pedidosArray.push(pedido);
+      }
+    },
+
+    cerrarModalStatus() {
+      this.showCambiarStatus = false;
+      this.refreshList();
+    },
+
     async refreshList() {
       await this.retrievePedidos();
 
       this.currentPedido = null;
       this.currentIndex = -1;
+      this.pedidosArray = [];
       this.buscador = "";
     },
 

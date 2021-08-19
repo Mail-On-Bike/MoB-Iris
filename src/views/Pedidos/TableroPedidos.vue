@@ -34,11 +34,8 @@
 
     <CambiarStatusPedido
       :showCambiarStatus="showCambiarStatus"
-      @cerrarModal="
-        showCambiarStatus = false;
-        refreshList();
-      "
-      :currentPedido="currentPedido"
+      @cerrarModal="cerrarModalStatus"
+      :arrayPedidos="pedidosArray"
     />
 
     <ResumenRuteo
@@ -120,6 +117,15 @@
         <label for="ruteos" class="resalta">Ruteos</label>
         <input id="ruteos" type="checkbox" v-model="ruteos" />
       </div>
+
+      <button
+        @click="showCambiarStatus = true"
+        class="flex items-center justify-center w-10 h-10 rounded-full focus:outline-none bg-primary disabled:bg-gray-400 disabled:opacity-90"
+        title="Estado del Pedido"
+        :disabled="emptyArray"
+      >
+        <font-awesome-icon class="text-lg text-white" icon="bicycle" />
+      </button>
     </div>
 
     <div class="grid grid-cols-10 gap-2">
@@ -369,15 +375,6 @@
             </button>
 
             <button
-              v-if="pedido.status.id !== 1"
-              @click="showCambiarStatus = true"
-              class="focus:outline-none"
-              title="Estado del Pedido"
-            >
-              <font-awesome-icon class="text-2xl text-primary" icon="bicycle" />
-            </button>
-
-            <button
               class="focus:outline-none"
               @click="showDetalle = true"
               title="Detalles del Pedido"
@@ -386,6 +383,19 @@
                 class="text-2xl text-primary"
                 icon="window-maximize"
               />
+            </button>
+
+            <button
+              v-if="pedido.status.id !== 1"
+              @click="cambiarEstadoPedido(pedido)"
+              class="focus:outline-none text-primary"
+            >
+              <font-awesome-icon
+                v-if="!pedidosArray.includes(pedido)"
+                class="text-2xl text-gray-400"
+                icon="check-circle"
+              />
+              <font-awesome-icon v-else class="text-2xl" icon="check-circle" />
             </button>
           </div>
         </div>
@@ -442,6 +452,7 @@ export default {
       pedidos: [],
       pedidosFiltrados: [],
       ruteosFiltrados: [],
+      pedidosArray: [],
       totalRuteos: 0,
       buscador: "",
       showComanda: false,
@@ -478,6 +489,14 @@ export default {
         return acc;
       }, 0);
       return total;
+    },
+
+    emptyArray() {
+      if (this.pedidosArray.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
   methods: {
@@ -536,6 +555,19 @@ export default {
       } catch (error) {
         console.error(`Error al obtener los Ruteos: ${error.message}`);
       }
+    },
+
+    cambiarEstadoPedido(pedido) {
+      if (this.pedidosArray.includes(pedido)) {
+        this.pedidosArray = this.pedidosArray.filter((pe) => pe !== pedido);
+      } else {
+        this.pedidosArray.push(pedido);
+      }
+    },
+
+    cerrarModalStatus() {
+      this.showCambiarStatus = false;
+      this.refreshList();
     },
 
     async getPedidosDelDia() {
@@ -604,6 +636,7 @@ export default {
 
       this.currentPedido = null;
       this.currentIndex = -1;
+      this.pedidosArray = [];
       this.buscador = "";
     },
 
