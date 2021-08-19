@@ -32,114 +32,243 @@
       </div>
 
       <!-- Texto de ejemplo para que el operador confirme la comanda -->
-      <div class="p-4 text-sm border-b-2 border-secondary">
-        <div>
-          <span class="resalta">Tipo Envío: </span
-          >{{ formatearTipoEnvio(currentRuta.pedidosRuta[0].tipoDeEnvio.tipo) }}
-        </div>
-        <div>
-          <span class="resalta">
-            Origen:
-          </span>
-          {{ currentRuta.pedidosRuta[0].direccionRemitente }} -
-          {{ currentRuta.pedidosRuta[0].distritoRemitente }}
-        </div>
-        <div>
-          <span class="resalta">Empresa: </span
-          >{{ currentRuta.pedidosRuta[0].empresaRemitente }}
-        </div>
-        <div>
-          <span class="resalta">
-            Contacto:
-          </span>
-          {{ currentRuta.pedidosRuta[0].contactoRemitente }} -
-          {{ currentRuta.pedidosRuta[0].telefonoRemitente }}
-        </div>
-        <div v-if="currentRuta.pedidosRuta[0].otroDatoRemitente !== null">
-          <span class="resalta">IMPORTANTE: </span
-          >{{ currentRuta.pedidosRuta[0].otroDatoRemitente }}
-        </div>
-        <br />
-        <div class="resalta">{{ currentRuta.pedidosRuta.length }} DESTINOS</div>
-        <div>
-          <span class="resalta">Llevar:</span>
-          {{ currentRuta.pedidosRuta[0].tipoCarga }}
+      <!-- Caso Remitente -->
+      <div v-if="currentRuta.pedidosRuta[0].rolCliente === 'Remitente'">
+        <div class="p-4 text-sm border-b-2 border-secondary">
+          <div>
+            <span class="resalta">Tipo Envío: </span
+            >{{
+              formatearTipoEnvio(currentRuta.pedidosRuta[0].tipoDeEnvio.tipo)
+            }}
+          </div>
+          <div>
+            <span class="resalta">
+              Origen:
+            </span>
+            {{ currentRuta.pedidosRuta[0].direccionRemitente }} -
+            {{ currentRuta.pedidosRuta[0].distritoRemitente }}
+          </div>
+          <div>
+            <span class="resalta">Empresa: </span
+            >{{ currentRuta.pedidosRuta[0].empresaRemitente }}
+          </div>
+          <div>
+            <span class="resalta">
+              Contacto:
+            </span>
+            {{ currentRuta.pedidosRuta[0].contactoRemitente }} -
+            {{ currentRuta.pedidosRuta[0].telefonoRemitente }}
+          </div>
+          <div v-if="currentRuta.pedidosRuta[0].otroDatoRemitente !== null">
+            <span class="resalta">IMPORTANTE: </span
+            >{{ currentRuta.pedidosRuta[0].otroDatoRemitente }}
+          </div>
+          <br />
+          <div class="resalta">
+            {{ currentRuta.pedidosRuta.length }} DESTINOS
+          </div>
+          <div>
+            <span class="resalta">Llevar:</span>
+            {{ currentRuta.pedidosRuta[0].tipoCarga }}
+          </div>
+
+          <div>
+            <span class="resalta">Tarifa:</span>
+            S/. {{ sumarTarifas(currentRuta.pedidosRuta) }}
+          </div>
+          <div>
+            <span class="resalta">Recaudo:</span>
+            S/. {{ sumarRecaudos(currentRuta.pedidosRuta) }}
+          </div>
+          <div>
+            <span class="resalta">Trámite:</span>
+            S/. {{ sumarTramites(currentRuta.pedidosRuta) }}
+          </div>
+          <div>
+            <span class="resalta">Comisión:</span>
+            S/. {{ sumarComisiones(currentRuta.pedidosRuta) }}
+          </div>
+          <div>
+            <span class="resalta">CO2:</span>
+            {{ sumarCO2(currentRuta.pedidosRuta) }} Kg
+          </div>
+          <div>
+            <span class="resalta">Horas de Ruido:</span>
+            {{ sumarHorasRuido(currentRuta.pedidosRuta) }} h
+          </div>
         </div>
 
-        <div>
-          <span class="resalta">Tarifa:</span>
-          S/. {{ sumarTarifas(currentRuta.pedidosRuta) }}
-        </div>
-        <div>
-          <span class="resalta">Recaudo:</span>
-          S/. {{ sumarRecaudos(currentRuta.pedidosRuta) }}
-        </div>
-        <div>
-          <span class="resalta">Trámite:</span>
-          S/. {{ sumarTramites(currentRuta.pedidosRuta) }}
-        </div>
-        <div>
-          <span class="resalta">Comisión:</span>
-          S/. {{ sumarComisiones(currentRuta.pedidosRuta) }}
-        </div>
-        <div>
-          <span class="resalta">CO2:</span>
-          {{ sumarCO2(currentRuta.pedidosRuta) }} Kg
-        </div>
-        <div>
-          <span class="resalta">Horas de Ruido:</span>
-          {{ sumarHorasRuido(currentRuta.pedidosRuta) }} h
+        <div class="px-10 py-4 overflow-y-auto text-sm max-h-52">
+          <div v-for="(destino, idx) in currentRuta.pedidosRuta" :key="idx">
+            <div class="resalta">Destino {{ idx + 1 }}</div>
+
+            <div>
+              <span class="resalta">Modalidad: </span
+              >{{ destino.modalidad.tipo }}
+            </div>
+
+            <div>
+              <span class="resalta">Tarifa: </span> S./ {{ destino.tarifa }} -
+              {{ formatearFormaPago(destino.formaPago) }}
+            </div>
+
+            <div>
+              <span class="resalta">Comisión: </span>
+              {{ destino.comision }}
+            </div>
+
+            <div>
+              <span class="resalta">Contacto: </span>
+              {{ destino.contactoConsignado }}
+            </div>
+
+            <div>
+              <span class="resalta">Dirección: </span>
+              {{ destino.direccionConsignado }} -
+              {{ destino.distrito.distrito }}
+            </div>
+
+            <div v-if="destino.empresaConsignado">
+              <span class="resalta">Empresa: </span>
+              {{ destino.empresaConsignado }}
+            </div>
+
+            <div>
+              <span class="resalta">Teléfono: </span>
+              {{ destino.telefonoConsignado }}
+            </div>
+
+            <div v-if="destino.otroDatoConsignado">
+              <span class="resalta">IMPORTANTE: </span
+              >{{ destino.otroDatoConsignado }}
+            </div>
+
+            <div v-if="destino.recaudo">
+              <span class="resalta">Recaudo: </span>
+              S/. {{ destino.recaudo }}
+            </div>
+            <br />
+          </div>
         </div>
       </div>
 
-      <div class="px-10 py-4 overflow-y-auto text-sm max-h-52">
-        <div v-for="(destino, idx) in currentRuta.pedidosRuta" :key="idx">
-          <div class="resalta">Destino {{ idx + 1 }}</div>
-
+      <!-- Caso Destinatario -->
+      <div v-else>
+        <div class="p-4 text-sm border-b-2 border-secondary">
           <div>
-            <span class="resalta">Modalidad: </span>{{ destino.modalidad.tipo }}
+            <span class="resalta">Tipo Envío: </span
+            >{{
+              formatearTipoEnvio(currentRuta.pedidosRuta[0].tipoDeEnvio.tipo)
+            }}
           </div>
-
           <div>
-            <span class="resalta">Tarifa: </span> S./ {{ destino.tarifa }} -
-            {{ formatearFormaPago(destino.formaPago) }}
+            <span class="resalta">
+              Destino:
+            </span>
+            {{ currentRuta.pedidosRuta[0].direccionRemitente }} -
+            {{ currentRuta.pedidosRuta[0].distritoRemitente }}
           </div>
-
           <div>
-            <span class="resalta">Comisión: </span>
-            {{ destino.comision }}
+            <span class="resalta">Empresa: </span
+            >{{ currentRuta.pedidosRuta[0].empresaRemitente }}
           </div>
-
           <div>
-            <span class="resalta">Contacto: </span>
-            {{ destino.contactoConsignado }}
+            <span class="resalta">
+              Contacto:
+            </span>
+            {{ currentRuta.pedidosRuta[0].contactoRemitente }} -
+            {{ currentRuta.pedidosRuta[0].telefonoRemitente }}
           </div>
-
-          <div>
-            <span class="resalta">Dirección: </span>
-            {{ destino.direccionConsignado }} - {{ destino.distrito.distrito }}
-          </div>
-
-          <div v-if="destino.empresaConsignado">
-            <span class="resalta">Empresa: </span>
-            {{ destino.empresaConsignado }}
-          </div>
-
-          <div>
-            <span class="resalta">Teléfono: </span>
-            {{ destino.telefonoConsignado }}
-          </div>
-
-          <div v-if="destino.otroDatoConsignado">
+          <div v-if="currentRuta.pedidosRuta[0].otroDatoRemitente !== null">
             <span class="resalta">IMPORTANTE: </span
-            >{{ destino.otroDatoConsignado }}
-          </div>
-
-          <div v-if="destino.recaudo">
-            <span class="resalta">Recaudo: </span>
-            S/. {{ destino.recaudo }}
+            >{{ currentRuta.pedidosRuta[0].otroDatoRemitente }}
           </div>
           <br />
+          <div class="resalta">
+            {{ currentRuta.pedidosRuta.length }} ORÍGENES
+          </div>
+          <div>
+            <span class="resalta">Llevar:</span>
+            {{ currentRuta.pedidosRuta[0].tipoCarga }}
+          </div>
+
+          <div>
+            <span class="resalta">Tarifa:</span>
+            S/. {{ sumarTarifas(currentRuta.pedidosRuta) }}
+          </div>
+          <div>
+            <span class="resalta">Recaudo:</span>
+            S/. {{ sumarRecaudos(currentRuta.pedidosRuta) }}
+          </div>
+          <div>
+            <span class="resalta">Trámite:</span>
+            S/. {{ sumarTramites(currentRuta.pedidosRuta) }}
+          </div>
+          <div>
+            <span class="resalta">Comisión:</span>
+            S/. {{ sumarComisiones(currentRuta.pedidosRuta) }}
+          </div>
+          <div>
+            <span class="resalta">CO2:</span>
+            {{ sumarCO2(currentRuta.pedidosRuta) }} Kg
+          </div>
+          <div>
+            <span class="resalta">Horas de Ruido:</span>
+            {{ sumarHorasRuido(currentRuta.pedidosRuta) }} h
+          </div>
+        </div>
+
+        <div class="px-10 py-4 overflow-y-auto text-sm max-h-52">
+          <div v-for="(destino, idx) in currentRuta.pedidosRuta" :key="idx">
+            <div class="resalta">Origen {{ idx + 1 }}</div>
+
+            <div>
+              <span class="resalta">Modalidad: </span
+              >{{ destino.modalidad.tipo }}
+            </div>
+
+            <div>
+              <span class="resalta">Tarifa: </span> S./ {{ destino.tarifa }} -
+              {{ formatearFormaPago(destino.formaPago) }}
+            </div>
+
+            <div>
+              <span class="resalta">Comisión: </span>
+              {{ destino.comision }}
+            </div>
+
+            <div>
+              <span class="resalta">Contacto: </span>
+              {{ destino.contactoConsignado }}
+            </div>
+
+            <div>
+              <span class="resalta">Dirección: </span>
+              {{ destino.direccionConsignado }} -
+              {{ destino.distrito.distrito }}
+            </div>
+
+            <div v-if="destino.empresaConsignado">
+              <span class="resalta">Empresa: </span>
+              {{ destino.empresaConsignado }}
+            </div>
+
+            <div>
+              <span class="resalta">Teléfono: </span>
+              {{ destino.telefonoConsignado }}
+            </div>
+
+            <div v-if="destino.otroDatoConsignado">
+              <span class="resalta">IMPORTANTE: </span
+              >{{ destino.otroDatoConsignado }}
+            </div>
+
+            <div v-if="destino.recaudo">
+              <span class="resalta">Recaudo: </span>
+              S/. {{ destino.recaudo }}
+            </div>
+            <br />
+          </div>
         </div>
       </div>
     </div>

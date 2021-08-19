@@ -1,19 +1,21 @@
 <template>
   <div>
-    <pre>
+    <!-- Caso Remitenten -->
+    <div v-if="currentRuta[0].rolCliente === 'Remitente'">
+      <pre>
 Tipo Envío: **{{ formatearTipoEnvio(currentRuta[0].tipoDeEnvio.tipo) }}**
 __Origen:__ {{ currentRuta[0].direccionRemitente }} - {{
-        currentRuta[0].distritoRemitente
-      }}
+          currentRuta[0].distritoRemitente
+        }}
 __Empresa:__ {{ currentRuta[0].empresaRemitente }}
 __Contacto:__ {{ currentRuta[0].contactoRemitente }} - {{
-        currentRuta[0].telefonoRemitente
-      }}
+          currentRuta[0].telefonoRemitente
+        }}
 {{
-        currentRuta[0].otroDatoRemitente
-          ? "**IMPORTANTE: " + currentRuta[0].otroDatoRemitente + "**"
-          : undefined
-      }}
+          currentRuta[0].otroDatoRemitente
+            ? "**IMPORTANTE: " + currentRuta[0].otroDatoRemitente + "**"
+            : undefined
+        }}
 
 **{{ currentRuta.length }} DESTINOS**
 __Llevar:__ {{ currentRuta[0].tipoCarga }}
@@ -27,39 +29,105 @@ __CO2:__ {{ sumarCO2(currentRuta) }} Kg
 __Horas de Ruido:__ {{ sumarHorasRuido(currentRuta) }} h
 _____________________________________
 </pre
-    >
-    <div v-for="(destino, idx) in currentRuta" :key="idx">
-      <pre>
+      >
+      <div v-for="(destino, idx) in currentRuta" :key="idx">
+        <pre>
 
 **Destino {{ idx + 1 }}**
 __Pedido:__ #{{ destino.id }}
 __Modalidad:__ **{{ destino.modalidad.tipo }}**
 __Tarifa: __ S/. {{ destino.tarifa }} - {{
-          formatearFormaPago(destino.formaPago)
-        }}
+            formatearFormaPago(destino.formaPago)
+          }}
 __Mi comisión:__ S/. {{ destino.comision }}
 __Contacto:__ {{ destino.contactoConsignado }} {{
-          destino.empresaConsignado
-            ? "- " + destino.empresaConsignado
-            : undefined
-        }}
+            destino.empresaConsignado
+              ? "- " + destino.empresaConsignado
+              : undefined
+          }}
 __Dirección:__ {{ destino.direccionConsignado }} - {{
-          destino.distrito.distrito
-        }}
+            destino.distrito.distrito
+          }}
 __Teléfono:__ {{ destino.telefonoConsignado }}
 {{
-          destino.otroDatoConsignado
-            ? "**IMPORTANTE: " + destino.otroDatoConsignado + "**"
-            : undefined
+            destino.otroDatoConsignado
+              ? "**IMPORTANTE: " + destino.otroDatoConsignado + "**"
+              : undefined
+          }}
+{{
+            destino.recaudo !== 0
+              ? "**COBRAR: S/. " + destino.recaudo + "**"
+              : undefined
+          }}
+_____________________________________
+</pre
+        >
+      </div>
+    </div>
+
+    <!-- Caso Destinatario -->
+    <div v-else>
+      <pre>
+Tipo Envío: **{{ formatearTipoEnvio(currentRuta[0].tipoDeEnvio.tipo) }}**
+__Destino:__ {{ currentRuta[0].direccionRemitente }} - {{
+          currentRuta[0].distritoRemitente
+        }}
+__Empresa:__ {{ currentRuta[0].empresaRemitente }}
+__Contacto:__ {{ currentRuta[0].contactoRemitente }} - {{
+          currentRuta[0].telefonoRemitente
         }}
 {{
-          destino.recaudo !== 0
-            ? "**COBRAR: S/. " + destino.recaudo + "**"
+          currentRuta[0].otroDatoRemitente
+            ? "**IMPORTANTE: " + currentRuta[0].otroDatoRemitente + "**"
             : undefined
         }}
+
+**{{ currentRuta.length }} ORÍGENES**
+__Llevar:__ {{ currentRuta[0].tipoCarga }}
+__Modalidad:__ RUTEO
+
+__Tarifa:__ S/. {{ sumarTarifas(currentRuta) }}
+__Recaudo:__ S/. {{ sumarRecaudos(currentRuta) }}
+__Trámite:__ S/. {{ sumarTramites(currentRuta) }}
+__Mi comisión:__ S/. {{ sumarComisiones(currentRuta) }}
+__CO2:__ {{ sumarCO2(currentRuta) }} Kg
+__Horas de Ruido:__ {{ sumarHorasRuido(currentRuta) }} h
 _____________________________________
 </pre
       >
+      <div v-for="(destino, idx) in currentRuta" :key="idx">
+        <pre>
+
+**Origen {{ idx + 1 }}**
+__Pedido:__ #{{ destino.id }}
+__Modalidad:__ **{{ destino.modalidad.tipo }}**
+__Tarifa: __ S/. {{ destino.tarifa }} - {{
+            formatearFormaPago(destino.formaPago)
+          }}
+__Mi comisión:__ S/. {{ destino.comision }}
+__Contacto:__ {{ destino.contactoConsignado }} {{
+            destino.empresaConsignado
+              ? "- " + destino.empresaConsignado
+              : undefined
+          }}
+__Dirección:__ {{ destino.direccionConsignado }} - {{
+            destino.distrito.distrito
+          }}
+__Teléfono:__ {{ destino.telefonoConsignado }}
+{{
+            destino.otroDatoConsignado
+              ? "**IMPORTANTE: " + destino.otroDatoConsignado + "**"
+              : undefined
+          }}
+{{
+            destino.recaudo !== 0
+              ? "**COBRAR: S/. " + destino.recaudo + "**"
+              : undefined
+          }}
+_____________________________________
+</pre
+        >
+      </div>
     </div>
   </div>
 </template>
