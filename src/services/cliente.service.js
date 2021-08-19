@@ -152,6 +152,23 @@ class ClienteService {
       console.error("Mensaje de error: ", error.message);
     }
   }
+
+  async getClientesPorFacturar(params) {
+    try {
+      let pedidosDelCliente = await axios.get(
+        `${API_URL}/clientes-por-facturar`,
+        {
+          params,
+          headers: authHeader(),
+        }
+      );
+
+      console.log(pedidosDelCliente.data);
+      return pedidosDelCliente.data;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
 }
 
 export default new ClienteService();

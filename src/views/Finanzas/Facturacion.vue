@@ -294,7 +294,7 @@ export default {
     },
   },
   methods: {
-    getRequestParams(desde, hasta, id, page, pageSize) {
+    getRequestParams(desde, hasta, razonComercial, page, pageSize) {
       let params = {};
 
       if (desde) {
@@ -305,8 +305,8 @@ export default {
         params["hasta"] = hasta;
       }
 
-      if (id) {
-        params["id"] = id;
+      if (razonComercial) {
+        params["razonComercial"] = razonComercial;
       }
 
       if (page) {
@@ -325,15 +325,16 @@ export default {
         const params = this.getRequestParams(
           this.$date(this.fechaInicio).format("YYYY-MM-DD"),
           this.$date(this.fechaFin).format("YYYY-MM-DD"),
-          this.currentIndex,
+          this.currentCliente.razonComercial,
           this.page,
           this.pageSize
         );
 
-        const response = await ClienteService.getPedidosDelCliente(params);
-
-        const { pedidos, totalPedidos } = response.data;
-        this.pedidosCliente = pedidos.filter((pedido) => pedido.statusId !== 6); // rows
+        const {
+          pedidos,
+          totalPedidos,
+        } = await ClienteService.getClientesPorFacturar(params);
+        this.pedidosCliente = pedidos; // rows
         this.cantidadPedidos = totalPedidos; // count
       } catch (error) {
         console.error(
