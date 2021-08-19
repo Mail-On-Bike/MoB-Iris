@@ -845,7 +845,8 @@ export default {
           this.nuevoPedido.distancia = this.distanciaMemoria;
         }
 
-        this.nuevoPedido.tarifa = response.tarifa;
+        this.nuevoPedido.tarifa =
+          this.nuevoPedido.recaudo > 0 ? response.tarifa + 2 : response.tarifa;
         this.tarifaMemoria = response.tarifa;
         this.nuevoPedido.tarifaSugerida = response.tarifaSugerida;
         this.tarifaSugeridaMemoria = response.tarifaSugerida;
