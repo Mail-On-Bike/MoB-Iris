@@ -17,24 +17,67 @@
     />
 
     <div class="flex flex-col items-center justify-center -mt-12">
-      <form class="w-4/5 p-4 border-b-2 border-primary" autocomplete="off">
-        <label for="nombreEmpresa" class="label-input"
-          >Nombre de la Empresa:</label
-        >
-        <input
-          v-model="nombreEmpresa"
-          type="text"
-          v-validate="'required|max:100'"
-          name="nombreEmpresa"
-          class="input"
-        />
-        <div
-          v-if="errors.has('nombreEmpresa')"
-          class="p-2 text-sm text-white bg-red-500 rounded"
-        >
-          <p>
-            El nombre de la empresa es requerida y máximo 75 caracteres
-          </p>
+      <form
+        class="grid w-4/5 grid-cols-5 gap-4 p-4 border-b-2 border-primary"
+        autocomplete="off"
+      >
+        <div class="col-span-3">
+          <label for="nombreEmpresa" class="label-input"
+            >Nombre de la Empresa:</label
+          >
+          <input
+            v-model="dataEmpresa.empresa"
+            type="text"
+            v-validate="'required|max:100'"
+            name="nombreEmpresa"
+            class="input"
+          />
+          <div
+            v-if="errors.has('nombreEmpresa')"
+            class="p-2 text-sm text-white bg-red-500 rounded"
+          >
+            <p>
+              El nombre de la empresa es requerida y máximo 75 caracteres
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <label for="ruc" class="label-input">Ruc:</label>
+          <input
+            v-model="dataEmpresa.ruc"
+            type="text"
+            v-validate="'min:11|max:11'"
+            name="ruc"
+            class="input"
+          />
+          <div
+            v-if="errors.has('ruc')"
+            class="p-2 text-sm text-white bg-red-500 rounded"
+          >
+            <p>
+              El RUC es de 11 números.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <label for="comprobante" class="label-input">Comprobante:</label>
+          <model-list-select
+            name="comprobante"
+            v-model="dataEmpresa.comprobante"
+            :list="tiposDeComprobante"
+            option-text="tipo"
+            option-value="tipo"
+          />
+          <div
+            v-if="errors.has('comprobante')"
+            class="p-2 text-sm text-white bg-red-500 rounded"
+          >
+            <p>
+              El comprobante es de máximo 25 caracteres
+            </p>
+          </div>
         </div>
       </form>
 
@@ -119,15 +162,15 @@ import BaseAlerta from "@/components/BaseAlerta.vue";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Empresa from "@/models/empresa";
 import EmpresaService from "@/services/empresa.service";
-import { mapActions } from "vuex";
+import { ModelListSelect } from "vue-search-select";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "EditarEmpresa",
-  components: { BaseAlerta, BuscadorCliente },
+  components: { BaseAlerta, BuscadorCliente, ModelListSelect },
   data() {
     return {
-      nombreEmpresa: "",
-      editarEmpresa: new Empresa("", []),
+      dataEmpresa: new Empresa("", "", "", []),
       showBuscador: false,
       alert: {
         message: "",
@@ -140,14 +183,22 @@ export default {
   mounted() {
     this.retrieveEmpresa(this.$route.params.id);
   },
+  computed: { ...mapState("auxiliares", ["tiposDeComprobante"]) },
   methods: {
     ...mapActions("empresas", ["getEmpresas"]),
 
     async retrieveEmpresa(id) {
       try {
-        const { empresa, clientes } = await EmpresaService.getEmpresa(id);
-        console.log(clientes);
-        this.nombreEmpresa = empresa;
+        const {
+          empresa,
+          ruc,
+          comprobante,
+          clientes,
+        } = await EmpresaService.getEmpresa(id);
+
+        this.dataEmpresa.empresa = empresa;
+        this.dataEmpresa.ruc = ruc;
+        this.dataEmpresa.comprobante = comprobante;
         this.clientesAsociados = clientes;
       } catch (error) {
         console.error(`Error a obtener la Empresa: ${error.message}`);
@@ -162,7 +213,9 @@ export default {
         }
 
         const editarEmpresa = {
-          empresa: this.nombreEmpresa,
+          empresa: this.dataEmpresa.empresa,
+          ruc: this.dataEmpresa.ruc,
+          comprobante: this.dataEmpresa.comprobante,
           clientes: this.clientesAsociados,
         };
 

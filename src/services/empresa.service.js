@@ -22,6 +22,8 @@ class EmpresaService {
         `${API_URL}/nueva-empresa`,
         {
           empresa: nuevaEmpresa.empresa,
+          ruc: nuevaEmpresa.ruc,
+          comprobante: nuevaEmpresa.comprobante,
           clientes: nuevaEmpresa.clientes,
         },
         {
@@ -41,6 +43,8 @@ class EmpresaService {
         `${API_URL}/empresas-registradas/${id}`,
         {
           empresa: editarEmpresa.empresa,
+          ruc: editarEmpresa.ruc,
+          comprobante: editarEmpresa.comprobante,
           clientes: editarEmpresa.clientes,
         },
         {
