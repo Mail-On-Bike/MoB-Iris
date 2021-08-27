@@ -704,6 +704,7 @@ import consultarApi from "@/services/maps.service";
 import calcularTarifa from "@/services/tarifa.service";
 import calcularEstadisticas from "@/services/ecoamigable.service";
 import ClienteService from "@/services/cliente.service";
+import Util from "@/services/util.service";
 
 export default {
   name: "Ruteo",
@@ -1284,15 +1285,11 @@ export default {
     },
 
     asignarHoy() {
-      let hoy = new Date();
-      return (this.nuevoPedido.fecha = hoy);
+      this.nuevoPedido.fecha = Util.asignarHoy();
     },
 
     asignarMañana() {
-      let hoy = new Date();
-      let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS);
-      return (this.nuevoPedido.fecha = manana);
+      this.nuevoPedido.fecha = Util.asignarMañana();
     },
 
     onFileChanged(event) {

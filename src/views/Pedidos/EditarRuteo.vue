@@ -758,6 +758,8 @@ import calcularTarifa from "@/services/tarifa.service";
 import calcularEstadisticas from "@/services/ecoamigable.service";
 import ClienteService from "@/services/cliente.service";
 
+import Util from "@/services/util.service";
+
 export default {
   name: "EditarRuteo",
   data() {
@@ -1399,15 +1401,11 @@ export default {
     },
 
     asignarHoy() {
-      let hoy = new Date();
-      return (this.pedido.fecha = hoy);
+      this.nuevoPedido.fecha = Util.asignarHoy();
     },
 
     asignarMañana() {
-      let hoy = new Date();
-      let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS);
-      return (this.pedido.fecha = manana);
+      this.nuevoPedido.fecha = Util.asignarMañana();
     },
 
     onFileChanged(event) {
@@ -1504,7 +1502,6 @@ export default {
         this.pedido.comision = 0.0;
         this.pedido.recaudo = 0;
         this.pedido.tramite = 0;
-
       } catch (error) {
         console.error(`Error al obtener un Ruteo por Id. ${error.message}`);
       }

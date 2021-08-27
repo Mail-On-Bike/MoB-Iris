@@ -16,6 +16,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "csvtojson": "^2.0.10",
+    "dayjs": "^1.10.6",
     "postcss": "^7.0.35",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "v-click-outside": "^3.1.2",

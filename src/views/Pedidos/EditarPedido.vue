@@ -554,6 +554,8 @@ import consultarApi from "@/services/maps.service";
 import calcularTarifa from "@/services/tarifa.service";
 import calcularEstadisticas from "@/services/ecoamigable.service";
 
+import Util from "@/services/util.service";
+
 export default {
   data() {
     return {
@@ -881,15 +883,11 @@ export default {
     },
 
     asignarHoy() {
-      let hoy = new Date();
-      return (this.editarPedido.fecha = hoy);
+      this.editarPedido.fecha = Util.asignarHoy();
     },
 
     asignarMañana() {
-      let hoy = new Date();
-      let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS);
-      return (this.editarPedido.fecha = manana);
+      this.editarPedido.fecha = Util.asignarMañana();
     },
   },
   components: {
