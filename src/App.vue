@@ -5,7 +5,9 @@
     </header>
 
     <main class="container justify-center mx-auto">
-      <router-view />
+      <transition name="fade" mode="out-in">
+        <router-view />
+      </transition>
     </main>
   </div>
 </template>
